@@ -29,11 +29,12 @@
 </script>
 
 
-<style>
+<style scoped>
 .nav {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    padding: 0 15px 0 15px;
 }
 
 .el-icon-search {
