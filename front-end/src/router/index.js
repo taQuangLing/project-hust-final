@@ -11,10 +11,14 @@ export default new Router({
       component: () => import('@/components/customer/Nav'),
       children: [
         {
-          path: '/home',
+          path: '/products',
           component: () => import('@/components/customer/Home')
-        }
+        },
       ]
+    },
+    {
+      path: '/products/:id',
+      component: () => import('@/components/customer/Details')
     }
   ]
 })

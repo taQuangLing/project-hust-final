@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="tab-container">
-      <div :class='{"tab-item": true, "active": activeTab === 0}' @click="activeTab = 0">
+      <div :class='{"tab-item": true, "tab-item-active": activeTab === 0}' @click="activeTab = 0">
         <i
           class="el-icon-menu"
           style="font-size: 50px; color: #acacac; margin-bottom: 3px"
@@ -11,7 +11,7 @@
       <div
         v-for="(category, index) in categories"
         :key="index"
-        :class='{"tab-item": true, "active": activeTab === index + 1}'
+        :class='{"tab-item": true, "tab-item-active": activeTab === index + 1}'
         @click="activeTab = index + 1"
       >
         <img :src="category.image" alt="category.name" />
@@ -185,7 +185,7 @@ export default {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   flex: 0 0 auto;
-  margin: 10px 0 10px 0;
+  margin: 10px 0 5px 0;
 }
 
 .tab-container::-webkit-scrollbar {
@@ -202,10 +202,12 @@ export default {
   margin: 0 25px 10px 0;
   padding: 5px;
   border-radius: 10px;
+  color: #727272;
   /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
 }
-.active {
-  background: #ffffff;
+.tab-item-active {
+  font-weight: 500;
+  color: #fc9332;
 }
 .tab-item img {
   width: 50px;
@@ -235,13 +237,13 @@ export default {
   justify-content: space-between;
   background: #ffffff;
   border-radius: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 .info {
   display: flex;
   flex: 1;
-  padding: 6px;
+  padding: 10px;
 }
 .info-detail {
   text-align: left;
@@ -249,7 +251,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
-  padding: 0 10px 0 10px;
+  padding: 0 15px 0 13px;
 }
 .info-detail label {
   color: #451717;
@@ -272,15 +274,16 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 21px;
   flex: 0 0 60px;
   height: 35px;
   font-weight: bold;
   color: #ffffff;
-  text-shadow: -0.3px -0.3px 0 #ffffff, 0.3px -0.3px 0 #ffffff,
-    -0.3px 0.3px 0 #ffffff, 0.3px 0.3px 0 #ffffff;
+  /* text-shadow: -0.3px -0.3px 0 #ffffff, 0.3px -0.3px 0 #ffffff,
+    -0.3px 0.3px 0 #ffffff, 0.3px 0.3px 0 #ffffff; */
   background: #ff902a;
-  border-bottom-left-radius: 10px;
+  border-bottom-left-radius: 14px;
   border-top-right-radius: 5px;
+  -webkit-text-stroke: 1px white;
 }
 </style>
