@@ -18,9 +18,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #000000;
-  background: #f7f8fa;
-  padding: 0 15px 0 15px;
-  overflow: hidden;
+  background: #e8e8e8;
+}
+a {
+  text-decoration: none;
 }
 body {
   all: unset;

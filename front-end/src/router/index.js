@@ -11,8 +11,22 @@ export default new Router({
       component: () => import('@/components/customer/Nav'),
       children: [
         {
-          path: '/products',
-          component: () => import('@/components/customer/Home')
+          path: '/',
+          component: () => import('@/components/customer/Product')
+        }
+      ],
+    },
+    {
+      path: '/cashier',
+      component: () => import('@/components/cashier/Nav'),
+      children: [
+        {
+          path: '',
+          component: () => import('@/components/cashier/Home')
+        },
+        {
+          path: 'order',
+          component: () => import('@/components/cashier/Order')
         },
       ]
     },
