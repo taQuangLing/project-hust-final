@@ -26,4 +26,9 @@ a {
 body {
   all: unset;
 }
+
+hr {
+  width: 1px;
+}
+
 </style>
