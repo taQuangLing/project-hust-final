@@ -3,23 +3,26 @@
     <div class="nav-left">
       <div class="nav-sidebar">
         <router-link to="/cashier">
-          <i
-            :class="{ 'el-icon-s-home': true, active: state === 'home' }"
-            @click="state = 'home'"
-          ></i>
+          <i :class="{ 'el-icon-s-home': true, active: state === 'home' }" @click="state = 'home'"></i>
         </router-link>
 
         <router-link to="/cashier/order">
-          <i
-            :class="{
-              'el-icon-shopping-cart-2': true,
-              active: state === 'order',
-            }"
-            @click="state = 'order'"
-          ></i>
+          <i :class="{
+            'el-icon-shopping-cart-2': true,
+            active: state === 'order',
+          }" @click="state = 'order'"></i>
         </router-link>
       </div>
-      <i class="el-icon-user"></i>
+      
+      <el-dropdown :hide-on-click="false">
+        <span class="el-dropdown-link">
+          <i class="el-icon-user"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>Thông tin</el-dropdown-item>
+          <el-dropdown-item>Đăng xuất</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
     <div class="content">
       <router-view />
@@ -118,7 +121,7 @@ i:hover {
 
 .content {
   flex-grow: 1;
-  background: #f3f3f3;
+  background: #ffffff;
 }
 
 .icon {

@@ -1,5 +1,5 @@
 <template>
-  <div class="data">
+  <div class="order-data">
     <div class="pagination">
       <el-pagination layout="prev, pager, next" :total="1000"> </el-pagination>
       <span>1-20/128 bản ghi</span>
@@ -50,7 +50,7 @@
           <span class="price">{{ item.price }}</span>
         </div>
       </div>
-      <hr>
+      <hr style="width: 100%">
     </div>
   </div>
 </template>
@@ -93,7 +93,7 @@ export default {
 </script>
 
 <style>
-.data {
+.order-data {
   width: 100%;
   height: 100vh;
   /* background-color: yellow; */
@@ -101,21 +101,22 @@ export default {
   flex-direction: column;
   align-items: center;
   overflow-y: auto;
+  color: #484848;
 }
 
-.data::-webkit-scrollbar {
+.order-data::-webkit-scrollbar {
   width: 10px;
 }
 
-.data::-webkit-scrollbar-track {
+.order-data::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-.data::-webkit-scrollbar-thumb {
+.order-data::-webkit-scrollbar-thumb {
   background: #b6b6b6;
 }
 
-.data::-webkit-scrollbar-thumb:hover {
+.order-data::-webkit-scrollbar-thumb:hover {
   background: #8b8b8b;
 }
 
@@ -149,14 +150,14 @@ export default {
   color: #ffffff00;
 }
 
-.title {
+.order-data .title {
   width: calc(100% - 20px);
   padding: 10px 10px 20px 10px;
   display: flex;
   justify-content: space-between;
 }
 
-.order {
+.order-data .order {
   width: calc(100% - 20px);
   padding: 10px 10px 0px 10px;
   display: flex;
@@ -169,7 +170,7 @@ export default {
   margin-bottom: 20px;
 }
 
-.item {
+.order-data .item {
   display: flex;
   justify-content: right;
   margin-bottom: 10px;
@@ -209,7 +210,7 @@ export default {
   color: #2c2c2c;
 }
 
-.order span {
+.span {
   font-size: 15px;
   color: #4b4b4b;
 }
@@ -231,7 +232,7 @@ export default {
   width: 12.42%;
 }
 
-.payment {
+.order-data.payment {
   width: 19.12%;
 }
 
@@ -244,34 +245,33 @@ export default {
 }
 
 .el-button {
-  width: 110px;
+  /* width: 110px; */
   background-color: #fff;
   border: solid 0.5px #8d8d8d;
   border-radius: 7px;
   padding: 8px 10px 8px 12px;
+  color: #4e4e4e;
 }
 
 .el-button:hover {
   background-color: #f0f0f0;
   border: solid 0.5px #313131;
+  color:#4e4e4e
 }
 
-.el-button span {
+.order-data .el-button span {
   font-family: "sarabun", "sans-serif";
   font-size: 14px;
 }
 
 .el-button--primary:focus {
-  background-color: #fff;
+  background-color: #f0f0f0;
   border: solid 0.5px #8d8d8d;
+  color:#4e4e4e
 }
 
 .el-dropdown-menu__item:not(.is-disabled) {
   font-family: "sarabun", "sans-serif";
 }
 
-hr {
-  width: 100%;
-  margin: 0;
-}
 </style>

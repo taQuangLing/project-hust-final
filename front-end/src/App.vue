@@ -28,7 +28,11 @@ body {
 }
 
 hr {
-  width: 1px;
+  margin: 0;
+}
+
+.btn {
+  cursor: pointer;
 }
 
 </style>

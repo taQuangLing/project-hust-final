@@ -59,6 +59,12 @@ export default {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.26);
 }
 
+.card:hover {
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.46);
+    transition: 0.3s;
+    cursor: pointer;
+}
+
 .name {
     font-size: 16px;
     font-weight: bold;
