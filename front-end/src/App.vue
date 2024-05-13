@@ -13,12 +13,12 @@ export default {
 <style>
 #app {
   margin: 0;
-  font-family: "Sarabun", sans-serif;
+  font-family: "Sarabun", sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #000000;
-  background: #e8e8e8;
+  background: #f7f7f7;
 }
 a {
   text-decoration: none;

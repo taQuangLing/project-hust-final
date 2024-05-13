@@ -1,6 +1,6 @@
 <template>
   <div class='nav'>
-    <header>
+    <header v-show='$route.path == "/"'>
       <img src="../../assets/logo.png" alt="Logo" class="logo">
       <i class="el-icon-search" v-show="!isSearching" @click="expandSearch"></i>
       <div class="search-container" v-show="isSearching">
@@ -48,10 +48,10 @@ export default {
 
 <style scoped>
 .nav {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    padding: 0 15px 0 15px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 0 15px 0 15px;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -137,6 +137,7 @@ nav {
   font-size: 15px;
   font-family: "Sarabun", sans-serif;
 }
+
 .search-bar:focus {
   outline: none;
 }
@@ -154,6 +155,7 @@ nav {
 main {
   /* border: solid 0.5px #222; */
   height: calc(100vh - 120px);
+  overflow-x: none;
 }
 
 .nav-button {

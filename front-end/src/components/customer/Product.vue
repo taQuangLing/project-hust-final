@@ -28,17 +28,29 @@
             <span>{{ drink.price }}</span>
           </div>
         </div>
-        <i class="el-icon-plus"></i>
+        <i class="el-icon-plus" @click="showModal = true"></i>
       </div>
+      <AddProductPopup 
+        :isPopupVisible="showModal" 
+        @close="showModal = false"
+      /> 
     </div>
   </div>
+  
 </template>
 
 <script>
+import AddProductPopup from './AddProductPopup.vue';
+
+
 export default {
+  components: {
+    AddProductPopup
+  },
   data() {
     return {
       activeTab: 0,
+      showModal: false,
       categories: [
         {
           name: "Trà",
@@ -199,7 +211,7 @@ export default {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  margin: 0 25px 10px 0;
+  margin-right: 20px;
   padding: 5px;
   border-radius: 10px;
   color: #727272;
@@ -209,11 +221,22 @@ export default {
   font-weight: 500;
   color: #fc9332;
 }
+.tab-item-active label {
+  font-size: 14px !important;
+}
+
+.tab-item-active img {
+  width: 60px !important;
+  height: 60px !important;
+  box-shadow: 0px 7px 13px rgba(0, 0, 0, 0.534);
+}
+
 .tab-item img {
   width: 50px;
   height: 50px;
   border-radius: 12px;
   margin-bottom: 3px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.336);
 }
 
 .tab-item label {

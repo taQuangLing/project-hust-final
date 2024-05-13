@@ -13,6 +13,10 @@ export default new Router({
         {
           path: '/',
           component: () => import('@/components/customer/Product')
+        },
+        {
+          path: '/products/:id',
+          component: () => import('@/components/customer/Details')
         }
       ],
     },
@@ -30,9 +34,6 @@ export default new Router({
         },
       ]
     },
-    {
-      path: '/products/:id',
-      component: () => import('@/components/customer/Details')
-    }
+    
   ]
 })

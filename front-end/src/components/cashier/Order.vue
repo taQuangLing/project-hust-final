@@ -350,7 +350,7 @@ export default {
 }
 
 .content {
-    height: calc(100% - 60px - 60px);
+    height: calc(100% - 59px - 61px);
     overflow-y: auto;
 }
 
