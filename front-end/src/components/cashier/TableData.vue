@@ -15,6 +15,7 @@
       <div class="space"></div>
     </div>
     <div v-for="order in orders" v-bind:key="order.id" class="order">
+      <hr style="width: 100%">
       <div class="order-info">
         <span class="code">{{ order.code }}</span>
         <span class="datetime">{{ order.datetime }}</span>
@@ -37,7 +38,8 @@
                 <el-dropdown-item>Hủy</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <div @click="toggleExpand(order.id)" v-if="order.status === 'Hoàn thành' || order.status === 'Đã hủy'" class="expand">
+            <div @click="toggleExpand(order.id)" v-if="order.status === 'Hoàn thành' || order.status === 'Đã hủy'"
+              class="expand">
               <i v-if="order.isExpanded === false" class="el-icon-arrow-down"></i>
               <i v-if="order.isExpanded === true" class="el-icon-arrow-up"></i>
             </div>
@@ -50,7 +52,7 @@
           <span class="price">{{ item.price }}</span>
         </div>
       </div>
-      <hr style="width: 100%">
+      
     </div>
   </div>
 </template>
@@ -127,13 +129,14 @@ export default {
   height: 30px;
   align-items: end;
   justify-content: space-between;
-  margin: 10px 0 5px ;
+  margin: 10px 0 5px;
 }
 
 .pagination span {
   font-size: 15px;
   margin-right: 15px;
 }
+
 .el-pagination {
   height: 21px;
   padding-left: 30px;
@@ -152,14 +155,14 @@ export default {
 
 .order-data .title {
   width: calc(100% - 20px);
-  padding: 10px 10px 20px 10px;
+  padding: 20px 10px 20px 10px;
   display: flex;
   justify-content: space-between;
 }
 
 .order-data .order {
   width: calc(100% - 20px);
-  padding: 10px 10px 0px 10px;
+  padding: 0 10px 0px 10px;
   display: flex;
   flex-direction: column;
   justify-items: end;
@@ -196,6 +199,9 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
+  background: #efefef;
+  padding: 10px 0 10px;
+  height: 33px;
 }
 
 .order-info span {
@@ -242,6 +248,9 @@ export default {
 
 .space {
   width: 10.42%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .el-button {
@@ -256,7 +265,7 @@ export default {
 .el-button:hover {
   background-color: #f0f0f0;
   border: solid 0.5px #313131;
-  color:#4e4e4e
+  color: #4e4e4e
 }
 
 .order-data .el-button span {
@@ -267,11 +276,10 @@ export default {
 .el-button--primary:focus {
   background-color: #f0f0f0;
   border: solid 0.5px #8d8d8d;
-  color:#4e4e4e
+  color: #4e4e4e
 }
 
 .el-dropdown-menu__item:not(.is-disabled) {
   font-family: "sarabun", "sans-serif";
 }
-
 </style>
