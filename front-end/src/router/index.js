@@ -12,12 +12,22 @@ export default new Router({
       children: [
         {
           path: '/',
+          name: 'home',
           component: () => import('@/components/customer/Product')
         },
         {
           path: '/products/:id',
+          name: 'productDetails',
           component: () => import('@/components/customer/Details')
-        }
+        },
+        {
+          path: '/carts',
+          component: () => import('@/components/customer/Cart')
+        },
+        {
+          path: '/my-orders',
+          component: () => import('@/components/customer/MyOrder')
+        },
       ],
     },
     {

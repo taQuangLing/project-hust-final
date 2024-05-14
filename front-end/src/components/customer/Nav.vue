@@ -1,8 +1,8 @@
 <template>
   <div class='nav'>
-    <header v-show='$route.path == "/"'>
+    <header v-if='!($route.name == "productDetails")'>
       <img src="../../assets/logo.png" alt="Logo" class="logo">
-      <i class="el-icon-search" v-show="!isSearching" @click="expandSearch"></i>
+      <i class="el-icon-search" v-show="!isSearching" @click="expandSearch" v-if="$route.name == 'home'"></i>
       <div class="search-container" v-show="isSearching">
         <input type="text" class="search-bar" v-model="search" placeholder="Search...">
         <i class="el-icon-close" @click="closeSearch"></i>
