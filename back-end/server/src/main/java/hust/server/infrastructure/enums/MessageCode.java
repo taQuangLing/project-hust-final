@@ -18,7 +18,9 @@ public enum MessageCode {
     EMPTY(4002, "SPECIAL RATING EMPTY", "Người dùng hệ thống chưa comment bài viết này"),
     TOKEN_ERROR(4003, "Token error", "Lỗi Token"),
     ACCOUNT_INCORRECT(4004, "Account incorrect", "Tài khoản hoặc mật khẩu không chính xác!"),
-    USERNAME_ALREADY_EXISTS(4005, "Username already exists", "Tài khoản đã tồn tại");
+    USERNAME_ALREADY_EXISTS(4005, "Username already exists", "Tài khoản đã tồn tại"),
+    BRANCH_NOT_EXIST(4006, "Branch does not exist", "Chi nhánh không tồn tại"),
+    ;
     private int code;
     private String message;
     private String description;

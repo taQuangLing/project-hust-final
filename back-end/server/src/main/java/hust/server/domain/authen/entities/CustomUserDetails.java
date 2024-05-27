@@ -3,6 +3,7 @@ package hust.server.domain.authen.entities;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,32 +15,23 @@ import java.util.Collection;
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class CustomUserDetails implements UserDetails {
-    private Long id;
+    private String id;
     private String username;
     private String password;
-    private Integer active;
     private String role;
+    private Long branchId;
 
-    public CustomUserDetails() {
-    }
-
-    public CustomUserDetails(Long id, String username, String role) {
+    public CustomUserDetails(String id, String username, String role) {
         this.id = id;
         this.username = username;
         this.role = role;
     }
 
-    public CustomUserDetails(Long id, String username) {
+    public CustomUserDetails(String id, String username) {
         this.id = id;
         this.username = username;
-    }
-
-    public CustomUserDetails(Long id, String username, String password, String role) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.role = role;
     }
 
     @Override

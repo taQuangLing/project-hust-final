@@ -19,21 +19,21 @@ public class JwtUtil {
     private String SECRET_KEY = "linh1234";
     private final int MUNINUS = 1000;
     // Tạo một JWT token dựa trên userDetails
-    public String generateToken(CustomUserDetails customUserDetails){
+    public String generateToken(CustomUserDetails customUserDetails, long expiration){
         Map<String, Object> claims = new HashMap<>();
-
         claims.put("id", customUserDetails.getId());
         claims.put("role", customUserDetails.getRole());
-        return createToken(claims, customUserDetails.getUsername());
+        claims.put("branch_id", customUserDetails.getBranchId());
+        return createToken(claims, customUserDetails.getUsername(), expiration);
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    private String createToken(Map<String, Object> claims, String subject, long expiration) {
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis())) // set ngày phát hành
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * MUNINUS)) // set thời gian sống là 10 giờ
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * expiration)) // set thời gian sống là 10 giờ
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
@@ -42,9 +42,9 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    public Long getClaimByKey(String token, String key) {
+    public String getClaimByKey(String token, String key) {
         final Claims claims = extractAllClaim(token);
-        return claims.get("id", Long.class);
+        return claims.get("id", String.class);
     }
 
     public String getClaimByRole(String token){
