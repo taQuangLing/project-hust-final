@@ -32,6 +32,15 @@ public class User {
     String lastName;
 
     @Column
+    String name;
+
+    @Column
+    String email;
+
+    @Column
+    String phone;
+
+    @Column
     String role;
 
     @Column
