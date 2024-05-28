@@ -1,6 +1,8 @@
 package hust.server.domain.products.entity;
 
+import hust.server.domain.products.dto.response.ProductDetailsGuestResponse;
 import hust.server.domain.products.dto.response.ProductGuestResponse;
+import hust.server.domain.products.dto.response.SizeResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -78,6 +81,28 @@ public class Product {
                 .summary(this.summary)
                 .build();
 
+    }
+
+    public ProductDetailsGuestResponse toProductDetailsGuestResponse(){
+        if (hasSize == 0){
+            return ProductDetailsGuestResponse.builder()
+                    .id(this.id)
+                    .img(this.img)
+                    .name(this.name)
+                    .price(this.price)
+                    .summary(this.summary)
+                    .hasSize(this.hasSize)
+                    .build();
+        }
+        List<SizeResponse> sizeResponses = new ArrayList<>();
+        this.productSizes.forEach(productSize -> {sizeResponses.add(productSize.toSizeResponse());});
+        return ProductDetailsGuestResponse.builder()
+                .id(this.id)
+                .img(this.img)
+                .name(this.name)
+                .sizes(sizeResponses)
+                .summary(this.summary)
+                .build();
     }
 
 }

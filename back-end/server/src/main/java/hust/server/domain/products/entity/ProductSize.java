@@ -1,5 +1,6 @@
 package hust.server.domain.products.entity;
 
+import hust.server.domain.products.dto.response.SizeResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,4 +27,13 @@ public class ProductSize {
 
     @Column(name = "is_default")
     private Integer isDefault;
+
+    public SizeResponse toSizeResponse(){
+        return SizeResponse.builder()
+                .id(this.id)
+                .size(this.size)
+                .price(this.price)
+                .isDefault(this.isDefault)
+                .build();
+    }
 }
