@@ -1,5 +1,6 @@
 package hust.server.domain.products.entity;
 
+import hust.server.domain.products.dto.response.ProductGuestResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,9 +35,6 @@ public class Product {
     @Column
     private String summary;
 
-    @Column(name = "category_id")
-    private Integer categoryId;
-
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -50,5 +48,18 @@ public class Product {
 
     @Column
     private String img;
+
+    @Column(name = "category_id")
+    private Long categoryId;
+
+    public ProductGuestResponse toProductGuestResponse(){
+        return ProductGuestResponse.builder()
+                .id(this.id)
+                .img(this.img)
+                .name(this.name)
+                .price(this.price.longValue())
+                .summary(this.summary)
+                .build();
+    }
 
 }

@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface BranchRepository extends JpaRepository<Branch, Long> {
     Optional<Branch> getByIdAndActive(Long branchId, int i);
+
+    Optional<Branch> getById(Long branchId);
 }

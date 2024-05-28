@@ -86,8 +86,8 @@ public class UserService implements UserDetailsService {
         return jwtTokenUntil.generateToken(customUserDetails, CASHIER_EXPIRATION);
     }
 
-    public String genGuestToken(GuestTokenRequest request){
-        Branch branch = branchRepository.getByIdAndActive(request.getBranchId(), 1).orElse(null);
+    public String genGuestToken(Long branchId){
+        Branch branch = branchRepository.getByIdAndActive(branchId, 1).orElse(null);
         if (branch == null)throw new ApiException(MessageCode.BRANCH_NOT_EXIST);
 
         User user = new User();
