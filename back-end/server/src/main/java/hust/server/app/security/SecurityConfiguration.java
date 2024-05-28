@@ -58,9 +58,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/guest/**").hasRole("GUEST")
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/guest/**").hasRole("GUEST")
                 .anyRequest()
                 .authenticated()
                 .and();
@@ -90,7 +90,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers("/public/**")
                 .antMatchers("/*/v3/api-docs/**", "/*/swagger-ui.html", "/*/swagger-ui/**", "/**/api-docs/**")
-                .antMatchers("/auth/**");
+                .antMatchers("/api/auth/**");
     }
 
     // @Bean

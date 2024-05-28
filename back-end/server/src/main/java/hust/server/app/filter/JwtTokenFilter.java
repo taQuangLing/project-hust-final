@@ -40,6 +40,7 @@ public class JwtTokenFilter extends BasicAuthenticationFilter {
         // UsernamePasswordAuthenticationToken và đưa vào context
 
         String username = null;
+        String role = null;
         String jwt = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -47,7 +48,7 @@ public class JwtTokenFilter extends BasicAuthenticationFilter {
             if (jwtUtil.isTokenExpired(jwt)) throw new ApiException(MessageCode.TOKEN_ERROR);
             username = jwtUtil.extractUsername(jwt);
         }
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if ((username != null || (jwt != null && jwtUtil.getClaimByRole(jwt).equals("GUEST"))) && SecurityContextHolder.getContext().getAuthentication() == null) {
             CustomUserDetails customUserDetails = new CustomUserDetails(
                     jwtUtil.getClaimByKey(jwt, "id"),
                     jwtUtil.extractUsername(jwt),

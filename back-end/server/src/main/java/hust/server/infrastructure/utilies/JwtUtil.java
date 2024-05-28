@@ -71,6 +71,7 @@ public class JwtUtil {
     }
     // check tên người dùng trong userDetails có trùng với tên trong token hay
     public Boolean validateToken(String token, @NotNull CustomUserDetails customUserDetails){
+        if (customUserDetails.getRole().equals("GUEST"))return !isTokenExpired(token);
         final String username = extractUsername(token);
         return (username.equals(customUserDetails.getUsername()) && !isTokenExpired(token));
     }

@@ -18,7 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth/v1")
 public class AuthController {
     @Autowired
     private UserService userService;
@@ -45,7 +45,9 @@ public class AuthController {
     }
 
     @GetMapping("/guest-token")
-    public ResponseEntity<?> genGuestToken(@RequestBody GuestTokenRequest request){
-        return ResponseFactory.response(userService.genGuestToken(request));
+    public ResponseEntity<?> genGuestToken(
+            @RequestParam Long branchId,
+            @RequestParam(required = false) Integer tableNumber){
+        return ResponseFactory.response(userService.genGuestToken(branchId));
     }
 }

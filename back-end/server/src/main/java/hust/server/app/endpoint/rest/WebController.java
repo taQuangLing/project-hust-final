@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/api")
 public class WebController {
     @Autowired
     private UserService userService;
@@ -22,12 +22,12 @@ public class WebController {
         return "home";
     }
 
-    @GetMapping("/user")
+    @GetMapping("/user/v1")
     public String hello() {
         return "hello";
     }
 
-    @GetMapping("/admin")
+    @GetMapping("/admin/v1")
     public String helloAdmin(){
         return "Welcome to Admin Page";
     }
