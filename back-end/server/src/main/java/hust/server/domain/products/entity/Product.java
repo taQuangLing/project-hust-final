@@ -9,8 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -27,10 +27,10 @@ public class Product {
     private String name;
 
     @Column
-    private BigDecimal price;
+    private Long cost;
 
     @Column
-    private BigDecimal cost;
+    private Long price;
 
     @Column
     private String summary;
@@ -52,14 +52,32 @@ public class Product {
     @Column(name = "category_id")
     private Long categoryId;
 
+    @OneToMany
+    @JoinColumn(name = "product_id")
+    private List<ProductSize> productSizes;
+
+    @Column(name = "has_size")
+    private Integer hasSize;
+
     public ProductGuestResponse toProductGuestResponse(){
+        if (hasSize == 0){
+            return ProductGuestResponse.builder()
+                    .id(this.id)
+                    .img(this.img)
+                    .name(this.name)
+                    .price(this.price)
+                    .summary(this.summary)
+                    .build();
+        }
+        ProductSize productSizeDefault = productSizes.stream().filter(productSize -> productSize.getIsDefault() == 1).findAny().get();
         return ProductGuestResponse.builder()
                 .id(this.id)
                 .img(this.img)
-                .name(this.name)
-                .price(this.price.longValue())
+                .name(this.name + " - size " + productSizeDefault.getSize())
+                .price(productSizeDefault.getPrice())
                 .summary(this.summary)
                 .build();
+
     }
 
 }
