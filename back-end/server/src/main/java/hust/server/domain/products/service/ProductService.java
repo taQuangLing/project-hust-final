@@ -1,15 +1,12 @@
 package hust.server.domain.products.service;
 
 import hust.server.app.exception.ApiException;
-import hust.server.domain.products.dto.response.MenuGuestResponse;
 import hust.server.domain.products.dto.response.ProductDetailsGuestResponse;
 import hust.server.domain.products.entity.Product;
 import hust.server.domain.products.repository.ProductRepository;
 import hust.server.infrastructure.enums.MessageCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ProductService {
