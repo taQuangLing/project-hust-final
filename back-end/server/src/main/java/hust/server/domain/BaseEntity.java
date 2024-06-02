@@ -1,23 +1,22 @@
 package hust.server.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
-import java.time.LocalDateTime;
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
+@MappedSuperclass
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class BaseEntity {
+public abstract class BaseEntity implements Serializable {
     @Column(name = "created_at")
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    protected Timestamp createdAt;
 
     @Column(name = "updated_at")
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    protected Timestamp updatedAt;
 }

@@ -4,9 +4,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.sql.Timestamp;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Random;
 
 public class Utility {
@@ -80,6 +83,16 @@ public class Utility {
     public static String getFieldOfSort(String sortBy){
         if (sortBy == null)return null;
         return  sortBy.substring(0, sortBy.indexOf(':'));
+    }
+
+    public static String toLocalDateTime(Timestamp timestamp, String format){
+        return formatDateTimeToString(timestamp.toLocalDateTime(), format);
+    }
+
+    public static String formatCurrency(Long value) {
+        Locale vietnam = new Locale("vi", "VN");
+        NumberFormat format = NumberFormat.getCurrencyInstance(vietnam);
+        return format.format(value);
     }
 
     public static void main(String[] args) {

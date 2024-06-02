@@ -1,6 +1,7 @@
 package hust.server.domain.products.entity;
 
-import hust.server.domain.products.dto.response.CategoryGuestResponse;
+import hust.server.domain.products.dto.response.CashierCategoryResponse;
+import hust.server.domain.products.dto.response.GuestCategoryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
@@ -33,8 +33,17 @@ public class Category {
     @Column
     private Integer active;
 
-    public CategoryGuestResponse toCategoryGuestResponse(){
-        return CategoryGuestResponse.builder()
+    public GuestCategoryResponse toCategoryGuestResponse(){
+        return GuestCategoryResponse.builder()
+                .id(this.id)
+                .name(this.name)
+                .img(this.img)
+                .products(new ArrayList<>())
+                .build();
+    }
+
+    public CashierCategoryResponse toCashierCategoryResponse(){
+        return CashierCategoryResponse.builder()
                 .id(this.id)
                 .name(this.name)
                 .img(this.img)

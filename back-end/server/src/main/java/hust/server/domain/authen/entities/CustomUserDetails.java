@@ -21,7 +21,6 @@ public class CustomUserDetails implements UserDetails {
     private String username;
     private String password;
     private String role;
-    private Long branchId;
 
     public CustomUserDetails(String id, String username, String role) {
         this.id = id;

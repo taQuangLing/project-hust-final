@@ -40,8 +40,8 @@ public class UserService implements UserDetailsService {
     @Autowired
     private BranchRepository branchRepository;
 
-    private final long GUEST_EXPIRATION = 30;
-    private final long CASHIER_EXPIRATION = 8 * 60;
+    private final long GUEST_EXPIRATION = 2 * 30 * 24 * 60;
+    private final long CASHIER_EXPIRATION = 2 * 30 * 24 * 60;
 
 
     @Override
@@ -53,7 +53,7 @@ public class UserService implements UserDetailsService {
         }
         return user.toCustomUserDetails();
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
     public MessageCode register(UserAccountRequest request){
         User user = userRepository.findByUsername(request.getUsername()).orElse(null);
         if (user != null) {
@@ -63,6 +63,8 @@ public class UserService implements UserDetailsService {
         User newUser = new User();
         newUser.setUsername(request.getUsername());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        newUser.setIsGuest(0);
+        newUser.setId(UUID.randomUUID().toString());
         // Set other fields of newUser as needed
 
         try {
@@ -76,7 +78,7 @@ public class UserService implements UserDetailsService {
     public User createGuestUser(String guestId) {
         User guestUser = new User();
         guestUser.setId(guestId);
-        guestUser.setIsGuest(true);
+        guestUser.setIsGuest(1);
         // Set other fields of guestUser as needed
 
         return userRepository.save(guestUser);
@@ -92,7 +94,7 @@ public class UserService implements UserDetailsService {
 
         User user = new User();
         user.setId(UUID.randomUUID().toString());
-        user.setIsGuest(true);
+        user.setIsGuest(1);
         user.setActive(1);
         user.setRole("GUEST");
         user.setCreatedAt(LocalDateTime.now());

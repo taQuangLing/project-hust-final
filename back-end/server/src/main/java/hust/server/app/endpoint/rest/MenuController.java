@@ -20,4 +20,9 @@ public class MenuController {
     public ResponseEntity<?> getMenuForGuest(@RequestParam Long branchId){
         return ResponseFactory.response(menuService.getMenuForGuest(branchId));
     }
+
+    @GetMapping("/cashier/v1/menu")
+    public ResponseEntity<?> cashierGetMenu(@RequestParam Long branchId){
+        return ResponseFactory.response(menuService.cashierGetMenu(branchId));
+    }
 }

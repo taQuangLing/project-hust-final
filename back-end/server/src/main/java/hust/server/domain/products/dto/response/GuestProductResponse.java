@@ -3,13 +3,12 @@ package hust.server.domain.products.dto.response;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.Column;
-
 @Data
 @Builder
-public class SizeResponse {
+public class GuestProductResponse {
     private Long id;
-    private String size;
+    private String name;
     private String price;
-    private Integer isDefault;
+    private String summary;
+    private String img;
 }

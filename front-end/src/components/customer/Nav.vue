@@ -12,10 +12,10 @@
       <router-view />
     </main>
     <nav>
-      <i :class="{ 'el-icon-s-home': true, 'active': state === 'home' }" @click='state = "home"'></i>
-      <i :class="{ 'el-icon-shopping-cart-2': true, 'active': state === 'shopping-cart' }"
-        @click='state = "shopping-cart"'></i>
-      <i :class="{ 'el-icon-s-order': true, 'active': state === 'history' }" @click='state = "history"'></i>
+      <router-link to="/"><i :class="{ 'el-icon-s-home': true, 'active': state === 'home' }" @click='state = "home"'></i></router-link>
+      <router-link to="/carts"><i :class="{ 'el-icon-shopping-cart-2': true, 'active': state === 'shopping-cart' }"
+        @click='state = "shopping-cart"'></i></router-link>
+      <router-link to="/my-orders"><i :class="{ 'el-icon-s-order': true, 'active': state === 'history' }" @click='state = "history"'></i></router-link>
     </nav>
   </div>
 </template>
@@ -30,6 +30,9 @@ export default {
       search: '',
       state: 'home',
     }
+  },
+  computed: {
+    
   },
   methods: {
     expandSearch() {

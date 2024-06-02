@@ -13,19 +13,9 @@
           </div>
         </div>
         <div class="quantity-control">
-          <button
-            @click="decrementQuantity(index)"
-            class="quantity-btn btn-left"
-          >
-            -
-          </button>
+          <i class="el-icon-minus quantity-btn btn-left" @click="decrementQuantity(index)"></i>
           <span>{{ item.quantity }}</span>
-          <button
-            @click="incrementQuantity(index)"
-            class="quantity-btn btn-right"
-          >
-            +
-          </button>
+          <i class="el-icon-plus quantity-btn btn-right" @click="decrementQuantity(index)"></i>
         </div>
       </div>
     </div>
@@ -35,28 +25,18 @@
       </div>
       <div class="payment-methods">
         <h3>Phương thức thanh toán</h3>
-        <label
-          ><input type="radio" value="Tiền mặt" v-model="paymentMethod" /> Tiền
-          mặt</label
-        >
-        <label
-          ><input type="radio" value="Chuyển khoản" v-model="paymentMethod" />
-          Chuyển khoản</label
-        >
-        <label
-          ><input type="radio" value="VNPAY" v-model="paymentMethod" />
-          VNPay</label
-        >
+        <label><input type="radio" value="Tiền mặt" v-model="paymentMethod" /> Tiền
+          mặt</label>
+        <label><input type="radio" value="Chuyển khoản" v-model="paymentMethod" />
+          Chuyển khoản</label>
+        <label><input type="radio" value="VNPAY" v-model="paymentMethod" />
+          VNPay</label>
       </div>
       <div class="delivery-methods">
-        <label
-          ><input type="radio" value="Tại bàn" v-model="deliveryMethod" /> Tại
-          bàn</label
-        >
-        <label
-          ><input type="radio" value="Mang đi" v-model="deliveryMethod" /> Mang
-          đi</label
-        >
+        <label><input type="radio" value="Tại bàn" v-model="deliveryMethod" /> Tại
+          bàn</label>
+        <label><input type="radio" value="Mang đi" v-model="deliveryMethod" /> Mang
+          đi</label>
       </div>
       <div class="total-cost">
         <h3>
@@ -170,6 +150,12 @@ h1 {
   overflow-y: auto;
 }
 
+.el-icon-minus, .el-icon-plus {
+  font-size: 12px;
+  color: #000000;
+  cursor: pointer;
+}
+
 .item {
   display: flex;
   align-items: center;
@@ -229,19 +215,21 @@ h1 {
   margin-top: 35px;
   height: 100%;
   border: solid 1px #969696;
-  border-radius: 7px;
-  background: #f6f6f6;
+  border-radius: 6px;
+  background: #fafafa;
 }
 
 .quantity-control span {
   margin: 0 7px 0 7px;
-  font-size: 14px;
+  font-size: 15px;
+  padding-bottom: 3px;
+  width: 12px;
 }
 
 .quantity-btn {
-  width: 20px;
+  width: 22px;
   height: 20px;
-  font-size: 15px;
+  font-size: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -258,7 +246,7 @@ h1 {
 }
 
 .option {
-    height: auto;
+  height: auto;
 }
 
 .discount-section {
@@ -347,4 +335,3 @@ input[type="radio"] {
   background-color: #e55c00;
 }
 </style>
-

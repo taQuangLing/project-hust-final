@@ -7,12 +7,12 @@ import java.util.List;
 
 @Data
 @Builder
-public class ProductDetailsGuestResponse {
+public class GuestProductDetailsResponse {
     private Long id;
     private String name;
     private String summary;
     private String img;
     private List<SizeResponse> sizes;
     private Integer hasSize;
-    private Long price;
+    private String price;
 }

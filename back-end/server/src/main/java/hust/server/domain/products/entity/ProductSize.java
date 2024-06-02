@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static hust.server.infrastructure.utilies.Utility.formatCurrency;
+
 @Data
 @Entity
 @Builder
@@ -17,7 +19,7 @@ import javax.persistence.*;
 public class ProductSize {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Long id;
 
     @Column(name = "size")
     private String size;
@@ -32,7 +34,7 @@ public class ProductSize {
         return SizeResponse.builder()
                 .id(this.id)
                 .size(this.size)
-                .price(this.price)
+                .price(formatCurrency(this.price))
                 .isDefault(this.isDefault)
                 .build();
     }

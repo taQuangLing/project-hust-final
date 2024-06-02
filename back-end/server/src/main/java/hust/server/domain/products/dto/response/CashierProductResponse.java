@@ -3,12 +3,15 @@ package hust.server.domain.products.dto.response;
 import lombok.Builder;
 import lombok.Data;
 
-@Data
+import java.util.List;
+
 @Builder
-public class ProductGuestResponse {
+@Data
+public class CashierProductResponse {
     private Long id;
     private String name;
-    private Long price;
-    private String summary;
+    private String price;
     private String img;
+    private Integer hasSize;
+    private List<SizeResponse> sizes;
 }

@@ -8,14 +8,10 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryGuestResponse {
-    private Long id;
-    private String name;
-    private String img;
-    private Integer count;
-    List<ProductGuestResponse> products = new ArrayList<>();
+public class GuestMenuResponse {
+    List<GuestCategoryResponse> categories = new ArrayList<>();
 }

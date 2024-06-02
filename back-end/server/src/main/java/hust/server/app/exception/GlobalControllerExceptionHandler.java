@@ -16,16 +16,17 @@ public class GlobalControllerExceptionHandler{
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> handleConversion(Exception ex) {
-        LOGGER.error("ERROR: ", ex);
         Response response = new Response();
         response.setMessage(ex.getMessage());
         if (ex instanceof ApiException) {
             ApiException apiException = (ApiException) ex;
+            LOGGER.error("ERROR: ", apiException.getEx());
             response.setCode(apiException.getCode());
             response.setMessage(apiException.getMessage());
             response.setDescription(apiException.getDescription());
             response.setData(apiException.getData());
         } else {
+            LOGGER.error("ERROR: ", ex);
             response.setCode(500);
             response.setMessage("System Error !");
             response.setDescription("Hệ thống đang bảo trì");

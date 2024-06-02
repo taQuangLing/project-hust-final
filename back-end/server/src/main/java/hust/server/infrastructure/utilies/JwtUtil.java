@@ -23,7 +23,6 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", customUserDetails.getId());
         claims.put("role", customUserDetails.getRole());
-        claims.put("branch_id", customUserDetails.getBranchId());
         return createToken(claims, customUserDetails.getUsername(), expiration);
     }
 
@@ -61,7 +60,7 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
     // Kiểm tra thời gian sống của token
-    public Boolean isTokenExpired(String token){
+    public Boolean isTokenExpired(String token) throws ApiException {
         Date date =  extractExpiration(token);
         if (date == null)throw new ApiException(MessageCode.TOKEN_ERROR);
         return date.before(new Date());

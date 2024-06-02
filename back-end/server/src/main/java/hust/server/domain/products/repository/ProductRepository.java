@@ -22,5 +22,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "p.id = menu_p.id", nativeQuery = true)
     List<Product> getProductMenu(Long branchId);
 
-    Optional<Product> getProductById(Long id);
+    Optional<Product> getById(Long id);
 }

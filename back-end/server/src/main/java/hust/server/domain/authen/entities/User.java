@@ -47,7 +47,7 @@ public class User {
     Integer active;
 
     @Column(name = "is_guest")
-    Boolean isGuest;
+    Integer isGuest;
 
     @Column(name = "created_at")
     LocalDateTime createdAt;
@@ -62,7 +62,6 @@ public class User {
                 .username(this.username)
                 .password(this.password)
                 .role(this.role)
-                .branchId(this.branch.getId())
                 .build();
         return customUserDetails;
     }
