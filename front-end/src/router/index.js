@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-export default new Router({
+export const router = new Router({
   routes: [
     {
       path: '/',
@@ -44,6 +44,21 @@ export default new Router({
         },
       ]
     },
-    
+    {
+      path: '/login',
+      component: () => import('@/components/Login')
+    }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  // chuyển đến trang login nếu chưa được login
+  const publicPages = ['/login', '/register'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = localStorage.getItem('user');
+
+  if (authRequired && !loggedIn) {
+    return next('/login');
+  }
+  next();
 })
