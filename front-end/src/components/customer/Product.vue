@@ -182,6 +182,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../../mixin/addProductPopup.css"
 .home {
   height: 100%;
   /* padding-top: 10px; */

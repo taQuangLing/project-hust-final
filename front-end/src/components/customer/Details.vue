@@ -90,6 +90,7 @@ export default {
 </script>
 
 <style>
+@import '../../mixin/addProductPopup.css';
 .product-details .el-icon-arrow-left {
     display: fixed;
     position: absolute;
