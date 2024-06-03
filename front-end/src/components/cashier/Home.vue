@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="left">
-      <TableData :orders="orders" />
+      <TableData :orders="orders" class="table-data" />
     </div>
     <hr style="width: 0">
     <div class="right">
@@ -270,6 +270,196 @@ export default {
 </script>
 
 <style scoped>
+.table-data {
+  width: 100%;
+  height: 100vh;
+  /* background-color: yellow; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  color: #484848;
+}
+
+.left>>>.table-data {
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #b6b6b6;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #8b8b8b;
+  }
+
+  .pagination {
+    /* padding-right: 15px; */
+    display: flex;
+    width: 100%;
+    height: 30px;
+    align-items: end;
+    justify-content: space-between;
+    margin: 10px 0 5px;
+  }
+
+  .pagination span {
+    font-size: 15px;
+    margin-right: 15px;
+  }
+
+  .el-pagination {
+    height: 21px;
+    padding-left: 30px;
+  }
+
+  .el-pager li,
+  .el-pagination .btn-next,
+  .el-pagination .btn-prev,
+  .el-pagination button:disabled {
+    background: none;
+  }
+
+  .el-pagination button:disabled {
+    color: #ffffff00;
+  }
+
+  .title {
+    width: calc(100% - 20px);
+    padding: 20px 10px 20px 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .order {
+    width: calc(100% - 20px);
+    padding: 0 10px 0px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-items: end;
+  }
+
+  .order-item {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .item {
+    display: flex;
+    justify-content: right;
+    margin-bottom: 10px;
+    width: 86.8%;
+  }
+
+  .item .name {
+    font-weight: 600;
+    width: 300px;
+    text-align: left;
+    margin-right: 20px;
+  }
+
+  .item span {
+    font-size: 15px;
+  }
+
+  .price {
+    width: 120px;
+  }
+
+  .order-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    background: #efefef;
+    padding: 10px 0 10px;
+    height: 33px;
+  }
+
+  .order-info span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .title span {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2c2c2c;
+  }
+
+  .span {
+    font-size: 15px;
+    color: #4b4b4b;
+  }
+
+  .code {
+    width: 13.42%;
+  }
+
+  .datetime {
+    width: 18.16%;
+  }
+
+  .total {
+    width: 11.47%;
+    font-weight: 600;
+  }
+
+  .hinh-thuc {
+    width: 12.42%;
+  }
+
+  .payment {
+    width: 19.12%;
+  }
+
+  .status {
+    width: 13.42%;
+  }
+
+  .space {
+    width: 10.42%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .el-button {
+    /* width: 110px; */
+    background-color: #fff;
+    border: solid 0.5px #8d8d8d;
+    border-radius: 7px;
+    padding: 8px 10px 8px 12px;
+    color: #4e4e4e;
+  }
+
+  .el-button:hover {
+    background-color: #f0f0f0;
+    border: solid 0.5px #313131;
+    color: #4e4e4e
+  }
+
+  .el-button span {
+    font-family: "sarabun", "sans-serif";
+    font-size: 14px;
+  }
+
+  .el-button--primary:focus {
+    background-color: #f0f0f0;
+    border: solid 0.5px #8d8d8d;
+    color: #4e4e4e
+  }
+
+  .el-dropdown-menu__item{
+    font-family: "sarabun", "sans-serif" !important;
+  }
+}
+
 .container {
   height: 100%;
   width: 100%;
@@ -344,12 +534,12 @@ hr {
   margin-left: 30px;
 }
 
->>>.el-radio__inner {
+.el-radio__inner {
   width: 16px;
   height: 16px;
 }
 
->>>.el-radio__label {
+.el-radio__label {
   font-size: 17px;
 }
 
@@ -365,7 +555,7 @@ hr {
   margin: 25px 0 25px;
 }
 
->>>.el-input__inner {
+.el-input__inner {
   border-radius: 7px;
   font-size: 15px;
 }
