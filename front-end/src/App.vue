@@ -20,9 +20,11 @@ export default {
   color: #000000;
   background: #fafafa;
 }
+
 a {
   text-decoration: none;
 }
+
 body {
   all: unset;
 }
@@ -35,4 +37,7 @@ hr {
   cursor: pointer;
 }
 
+.el-dropdown-menu__item {
+  font-family: "sarabun", "sans-serif";
+}
 </style>
