@@ -1,19 +1,12 @@
 <template>
   <div class="home">
     <div class="tab-container">
-      <div :class='{"tab-item": true, "tab-item-active": activeTab === 0}' @click="activeTab = 0">
-        <i
-          class="el-icon-menu"
-          style="font-size: 50px; color: #acacac; margin-bottom: 3px"
-        ></i>
+      <div :class='{ "tab-item": true, "tab-item-active": activeTab === 0 }' @click="activeTab = 0">
+        <i class="el-icon-menu" style="font-size: 50px; color: #acacac; margin-bottom: 3px"></i>
         <label>Tất cả</label>
       </div>
-      <div
-        v-for="(category, index) in categories"
-        :key="index"
-        :class='{"tab-item": true, "tab-item-active": activeTab === index + 1}'
-        @click="activeTab = index + 1"
-      >
+      <div v-for="(category, index) in categories" :key="index"
+        :class='{ "tab-item": true, "tab-item-active": activeTab === index + 1 }' @click="activeTab = index + 1">
         <img :src="category.image" alt="category.name" />
         <label>{{ category.name }}</label>
       </div>
@@ -30,13 +23,10 @@
         </div>
         <i class="el-icon-plus" @click="showModal = true"></i>
       </div>
-      <AddProductPopup 
-        :isPopupVisible="showModal" 
-        @close="showModal = false"
-      /> 
+      <AddProductPopup :isPopupVisible="showModal" @close="showModal = false" />
     </div>
   </div>
-  
+
 </template>
 
 <script>
@@ -183,20 +173,23 @@ export default {
 
 <style scoped>
 @import "../../mixin/addProductPopup.css"
+
 .home {
   height: 100%;
-  /* padding-top: 10px; */
   display: grid;
   grid-template-rows: 110px 1fr;
 }
+
 .tab-container {
   display: flex;
   width: 100%;
   display: flex;
   overflow-x: auto;
   white-space: nowrap;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
   flex: 0 0 auto;
   margin: 10px 0 5px 0;
 }
@@ -218,10 +211,12 @@ export default {
   color: #727272;
   /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
 }
+
 .tab-item-active {
   font-weight: 500;
   color: #fc9332;
 }
+
 .tab-item-active label {
   font-size: 14px !important;
 }
@@ -247,15 +242,19 @@ export default {
 }
 
 .content-container {
-  flex-grow: 1; /* This will make it take up the remaining space */
-  overflow-y: auto; /* This will make it scrollable if the content overflows */
+  flex-grow: 1;
+  /* This will make it take up the remaining space */
+  overflow-y: auto;
+  /* This will make it scrollable if the content overflows */
 }
+
 .info img {
   width: 70px;
   height: 70px;
   border-radius: 5px;
   flex: 0 0 70px;
 }
+
 .drink {
   display: flex;
   justify-content: space-between;
@@ -264,11 +263,13 @@ export default {
   margin-bottom: 25px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
+
 .info {
   display: flex;
   flex: 1;
   padding: 10px;
 }
+
 .info-detail {
   text-align: left;
   display: flex;
@@ -277,23 +278,27 @@ export default {
   flex: 1;
   padding: 0 15px 0 13px;
 }
+
 .info-detail label {
   color: #451717;
   font-size: 17px;
   font-weight: 700;
   margin-bottom: 3px;
 }
+
 .info-detail p {
   margin: 0;
   color: #696969;
   font-size: 12px;
   margin-bottom: 3px;
 }
+
 .info-detail span {
   color: #ff902a;
   font-size: 15px;
   font-weight: bold;
 }
+
 .el-icon-plus {
   display: flex;
   align-items: center;

@@ -130,7 +130,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .order-screen {
   display: flex;
   flex-direction: column;
