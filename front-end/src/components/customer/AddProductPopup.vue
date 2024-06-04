@@ -1,5 +1,5 @@
 <template>
-  <div class="popup-001">
+  <div>
     <div v-if="isPopupVisible" class="popup-overlay" @click.self="closePopup">
       <div class="popup-content">
         <!-- Nội dung của popup -->
