@@ -40,4 +40,12 @@ hr {
 .el-dropdown-menu__item {
   font-family: "sarabun", "sans-serif";
 }
+.el-message__content {
+  font-family: "sarabun", "sans-serif" !important;
+}
+
+input[type="checkbox"] {
+  accent-color: #474747 !important;
+  margin: 0;
+}
 </style>

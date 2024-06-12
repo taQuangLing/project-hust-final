@@ -22,6 +22,8 @@ public enum MessageCode {
     BRANCH_NOT_EXIST(4006, "Branch does not exist", "Chi nhánh không tồn tại"),
     BRANCH_INACTIVE(4007, "Branch inactive", "Chi nhánh đang tạm dừng hoạt động"),
     MENU_NOT_EXIST(4008, "Branch hasn't menu", "Chi nhánh chưa cấu hình menu"),
+    TOKEN_EXPIRED(4009, "Token is expired", "Token đã hết hạn"),
+    TOKEN_VALIDATE(4010, "Token is validate", "Token hợp lệ"),
     ;
     private int code;
     private String message;

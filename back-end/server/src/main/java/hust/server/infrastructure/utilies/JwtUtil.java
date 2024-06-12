@@ -26,6 +26,14 @@ public class JwtUtil {
         return createToken(claims, customUserDetails.getUsername(), expiration);
     }
 
+    public String generateToken(CustomUserDetails customUserDetails, long expiration, Map<String, Object> payload) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", customUserDetails.getId());
+        claims.put("role", customUserDetails.getRole());
+        claims.putAll(payload);
+        return createToken(claims, customUserDetails.getUsername(), expiration);
+    }
+
     private String createToken(Map<String, Object> claims, String subject, long expiration) {
 
         return Jwts.builder()
@@ -41,7 +49,7 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    public String getClaimByKey(String token, String key) {
+    public String getClaimByKey(String token) {
         final Claims claims = extractAllClaim(token);
         return claims.get("id", String.class);
     }

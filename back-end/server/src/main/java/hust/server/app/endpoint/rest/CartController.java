@@ -1,10 +1,7 @@
 package hust.server.app.endpoint.rest;
 
 import hust.server.app.service.ResponseFactory;
-import hust.server.domain.order.dto.request.CartItemCreationRequest;
-import hust.server.domain.order.dto.request.CheckCartItemRequest;
-import hust.server.domain.order.dto.request.OrderRequest;
-import hust.server.domain.order.dto.request.QuantityCartItemUpdateRequest;
+import hust.server.domain.order.dto.request.*;
 import hust.server.domain.order.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +9,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class CartController {
     @Autowired
     private CartService cartService;
 
-    @GetMapping("/guest/v1/carts/{id}")
-    public ResponseEntity<?> getCartsList(@PathVariable(name = "id") String userId){
+    @GetMapping("/guest/v1/carts")
+    public ResponseEntity<?> getCartsList(@RequestParam(name = "userId") String userId){
         return ResponseFactory.response(cartService.guestGetCartList(userId));
     }
 
@@ -42,7 +40,15 @@ public class CartController {
         return ResponseFactory.response(cartService.updateQuantity(request));
     }
 
-    @DeleteMapping("/guest/v1/carts/{id}")
+    @PutMapping("/guest/v1/carts/{id}/note")
+    public ResponseEntity<?> updateNote(@PathVariable Long id,
+                                            @RequestBody CartUpdateNoteRequest request)
+    {
+        request.setId(id);
+        return ResponseFactory.response(cartService.updateNote(request));
+    }
+
+    @DeleteMapping("/guest/v1/cartItem/{id}")
     public ResponseEntity<?> guestDeleteCart(@PathVariable Long id){
         return ResponseFactory.response(cartService.deleteCartItem(id));
     }

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
 
 const API_URL = 'http://localhost:8080/api/auth/v1/';
 
@@ -11,7 +12,10 @@ class AuthService {
       })
       .then(response => {
         if (response.data.data) {
-          localStorage.setItem('user', JSON.stringify(response.data.data.jwt).replace(/\"/g, ""));
+          const jwt = JSON.stringify(response.data.data.jwt).replace(/\"/g, "");
+          const id = jwtDecode(jwt).id;
+          localStorage.setItem('user', jwt);
+          localStorage.setItem('id', id);
         }
         return response.data;
       });

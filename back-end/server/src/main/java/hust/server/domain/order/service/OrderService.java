@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -108,6 +110,7 @@ public class OrderService {
 
     public List<GuestOrderResponse> getGuestOrder(String userId) {
         List<Order> orders = orderRepository.getByUserId(userId);
+        Collections.sort(orders, Comparator.comparing(Order::getCreatedAt).reversed());
 
         return orders.stream().map(Order::toGuestOrderResponse).collect(Collectors.toList());
     }

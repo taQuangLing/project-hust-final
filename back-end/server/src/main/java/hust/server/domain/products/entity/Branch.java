@@ -45,4 +45,7 @@ public class Branch {
 
     @Column
     private Integer active;
+
+    @Column
+    private String code;
 }

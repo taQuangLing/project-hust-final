@@ -1,4 +1,4 @@
-package hust.server.domain.authen.dto.response;
+package hust.server.domain.authen.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthResponse {
+public class TokenRequest {
     private String jwt;
-    private String role;
 }
-

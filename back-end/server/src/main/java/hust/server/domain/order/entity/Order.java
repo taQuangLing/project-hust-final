@@ -77,7 +77,7 @@ public class Order extends BaseEntity {
         String statusString = null;
         switch (status){
             case 0:
-                statusString = "Chờ xác nhận";
+                statusString = "Chờ thanh toán";
                 break;
             case 1:
                 statusString = "Đang pha chế";
@@ -93,6 +93,7 @@ public class Order extends BaseEntity {
         }
 
         return GuestOrderResponse.builder()
+                .id(id)
                 .orderAt(toLocalDateTime(createdAt, null))
                 .orderItemList(orderItemList.stream().map(OrderItem::toGuestOrderItemResponse).collect(Collectors.toList()))
                 .status(statusString)

@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import {store} from '@/store'
+import { jwtDecode } from "jwt-decode";
 
 Vue.use(Router)
 
@@ -7,13 +9,13 @@ export const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'Nav',
       component: () => import('@/components/customer/Nav'),
+      meta: { requiresAuth: true, roles: ['guest'] },
       children: [
         {
           path: '/',
           name: 'home',
-          component: () => import('@/components/customer/Product')
+          component: () => import('@/components/customer/Product'),
         },
         {
           path: '/products/:id',
@@ -22,24 +24,31 @@ export const router = new Router({
         },
         {
           path: '/carts',
+          name: 'carts',
           component: () => import('@/components/customer/Cart')
         },
         {
-          path: '/my-orders',
+          name: 'my-orders',
+          path: '/history',
           component: () => import('@/components/customer/MyOrder')
         },
+        {
+          path: '/order-success',
+          component: () => import('@/components/customer/OrderSuccess')
+        }
       ],
     },
     {
       path: '/cashier',
       component: () => import('@/components/cashier/Nav'),
+      meta: { requiresAuth: true, roles: ['user'] },
       children: [
         {
           path: '',
           component: () => import('@/components/cashier/Home')
         },
         {
-          path: 'order',
+          path: '/order',
           component: () => import('@/components/cashier/Order')
         },
       ]
@@ -47,18 +56,30 @@ export const router = new Router({
     {
       path: '/login',
       component: () => import('@/components/Login')
-    }
+    },
+    {
+      path: '/authenticate',
+      component: () => import('@/components/customer/Authen')
+    },
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  // chuyển đến trang login nếu chưa được login
-  const publicPages = ['/login', '/register'];
-  const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem('user');
+  const publicPages = ['/login', '/register', '/authenticate'];
+  const requiresAuth = to.matched.some(record => {
+    record.meta.requiresAuth && record.meta.roles.includes(store.state.role)
+  })
 
-  if (authRequired && !loggedIn) {
-    return next('/login');
+  if (publicPages.includes(to.path)) {
+    next();
+    return;
   }
-  next();
+
+  const role = jwtDecode(localStorage.getItem('user')).role;
+
+  if (!requiresAuth && !role){
+    next('/login') // redirect to login page if user is not authenticated
+  } else {
+    next() // proceed to route
+  }
 })

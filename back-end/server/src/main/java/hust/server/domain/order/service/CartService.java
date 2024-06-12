@@ -2,6 +2,7 @@ package hust.server.domain.order.service;
 
 import hust.server.app.exception.ApiException;
 import hust.server.domain.order.dto.request.CartItemCreationRequest;
+import hust.server.domain.order.dto.request.CartUpdateNoteRequest;
 import hust.server.domain.order.dto.request.CheckCartItemRequest;
 import hust.server.domain.order.dto.request.QuantityCartItemUpdateRequest;
 import hust.server.domain.order.dto.response.CashierCartItemResponse;
@@ -98,7 +99,10 @@ public class CartService {
 
     public MessageCode addCartItem(CartItemCreationRequest request) {
         Cart cart = cartRepository.getByUserId(request.getUserId()).orElse(null);
-        if (cart == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "userId = " + request.getUserId());
+        if (cart == null){
+            cart = new Cart();
+            cart.setUserId(request.getUserId());
+        }
 
         Product product = productRepository.getById(request.getProductId()).orElse(null);
         if (product == null)throw new ApiException(MessageCode.ID_NOT_FOUND);
@@ -174,6 +178,19 @@ public class CartService {
             return MessageCode.SUCCESS;
         }catch(Exception e){
             throw new ApiException(e, MessageCode.ERROR);
+        }
+    }
+
+    public MessageCode updateNote(CartUpdateNoteRequest request) {
+        CartItem cartItem = cartItemRepository.getById(request.getId()).orElse(null);
+
+        if (cartItem == null)throw new ApiException(MessageCode.ID_NOT_FOUND);
+        cartItem.setNote(request.getNote());
+        try{
+            cartItemRepository.save(cartItem);
+            return MessageCode.SUCCESS;
+        }catch (Exception e){
+            throw new ApiException(MessageCode.ERROR);
         }
     }
 }

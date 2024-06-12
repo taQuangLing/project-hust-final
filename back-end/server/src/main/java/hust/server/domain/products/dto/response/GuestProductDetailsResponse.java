@@ -14,5 +14,7 @@ public class GuestProductDetailsResponse {
     private String img;
     private List<SizeResponse> sizes;
     private Integer hasSize;
-    private String price;
+    private String priceDisplay;
+    private Long price;
+    private String description;
 }

@@ -1,7 +1,7 @@
 <template>
   <div class='nav'>
     <header v-if='!($route.name == "productDetails")'>
-      <img src="../../assets/logo.png" alt="Logo" class="logo">
+      <img v-if="!isSearching" src="../../assets/logo.png" alt="Logo" class="logo">
       <i class="el-icon-search" v-show="!isSearching" @click="expandSearch" v-if="$route.name == 'home'"></i>
       <div class="search-container" v-show="isSearching">
         <input type="text" class="search-bar" v-model="search" placeholder="Search...">
@@ -12,14 +12,13 @@
       <router-view />
     </main>
     <nav>
-      <router-link to="/"><i :class="{ 'el-icon-s-home': true, 'active': state === 'home' }" @click='state = "home"'></i></router-link>
-      <router-link to="/carts"><i :class="{ 'el-icon-shopping-cart-2': true, 'active': state === 'shopping-cart' }"
-        @click='state = "shopping-cart"'></i></router-link>
-      <router-link to="/my-orders"><i :class="{ 'el-icon-s-order': true, 'active': state === 'history' }" @click='state = "history"'></i></router-link>
+      <router-link to="/? "><i :class="{ 'el-icon-s-home': true, 'active': state === 'home' }" @click='state = "home"'></i></router-link>
+      <router-link to="/carts"><i :class="{ 'el-icon-shopping-cart-2': true, 'active': state === 'carts' }"
+        @click='state = "carts"'></i></router-link>
+      <router-link to="/history"><i :class="{ 'el-icon-s-order': true, 'active': state === 'history' }" @click='state = "history"'></i></router-link>
     </nav>
   </div>
 </template>
-
 <script>
 export default {
   components: {
@@ -31,9 +30,6 @@ export default {
       state: 'home',
     }
   },
-  computed: {
-    
-  },
   methods: {
     expandSearch() {
       this.isSearching = true;
@@ -43,6 +39,17 @@ export default {
       this.search = '';
     },
     // Rest of your methods
+  },
+  watch: {
+    $route(to, from) {
+      if (to.name == 'home') {
+        this.state = 'home';
+      } else if (to.name == 'carts') {
+        this.state = 'carts';
+      } else if (to.name == 'my-orders') {
+        this.state = 'history';
+      }
+    }
   }
 
 }
@@ -122,7 +129,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 230px;
+  width: 100%;
   height: 35px;
   border-radius: 20px;
   background-color: #fff;

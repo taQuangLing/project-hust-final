@@ -1,13 +1,13 @@
 <template>
     <div class="login">
         <div :class="{ 'right-panel-active': isRightPanelActive, 'container': true }" id="container">
-            <div class="form-container sign-up-container">
+            <!-- <div class="form-container sign-up-container">
                 <form v-if="isVerify === false" :class="{ 'isVerify': true }" v-loading="loading">
                     <h1>Create Account</h1>
                     <div class="social-container">
-                        <!-- <a href="#" class="social">
+                        <a href="#" class="social">
                             <Google />
-                        </a> -->
+                        </a>
                     </div>
                     <span>or use your email for registration</span>
                     <input type="text" placeholder="Nguyen Van A" v-model="fullname" />
@@ -24,7 +24,7 @@
                     <a class="back-register" @click="back">Quay lại trang đăng ký</a>
                     <button @click="verify">Verify</button>
                 </form>
-            </div>
+            </div> -->
             <div class="form-container sign-in-container">
                 <form>
                     <h1>Sign in</h1>
@@ -40,7 +40,7 @@
                     <button @click="handleSignIn">Sign In</button>
                 </form>
             </div>
-            <div class="overlay-container">
+            <!-- <div class="overlay-container">
                 <div class="overlay">
                     <div class="overlay-panel overlay-left">
                         <h1>Welcome Back!</h1>
@@ -53,7 +53,7 @@
                         <button class="ghost" id="signUp" @click="signUpToggle">Sign Up</button>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -77,7 +77,6 @@ export default {
     },
     computed: {
         status() {
-            console.log(this.$store);
             return this.$store.state.auth.status;
         },
     },
@@ -114,7 +113,7 @@ export default {
             this.$store.dispatch('auth/login', user).then(
                 (response) => {
                     if (response.data.role == "ADMIN") {
-                        this.$router.push("/admin/");
+                        this.$router.push("/admin");
                     }else if (response.data.role == "USER"){
                         this.$router.push("/cashier");
                     }
@@ -187,18 +186,6 @@ export default {
 * {
     box-sizing: border-box;
 }
-
-body {
-    background: #f6f5f7;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-family: 'Montserrat', sans-serif;
-    height: 100vh;
-    margin: -20px 0 50px;
-}
-
 .login {
     display: flex;
     align-items: center;
@@ -298,7 +285,7 @@ input {
         0 10px 10px rgba(0, 0, 0, 0.22);
     position: relative;
     overflow: hidden;
-    width: 768px;
+    width: 384px;
     max-width: 100%;
     min-height: 480px;
 }
@@ -312,8 +299,8 @@ input {
 
 .sign-in-container {
     left: 0;
-    width: 50%;
     z-index: 2;
+    width: 100%;
 }
 
 .container.right-panel-active .sign-in-container {

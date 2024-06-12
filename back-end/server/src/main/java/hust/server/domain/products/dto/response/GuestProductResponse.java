@@ -8,7 +8,8 @@ import lombok.Data;
 public class GuestProductResponse {
     private Long id;
     private String name;
-    private String price;
+    private String priceDisplay;
     private String summary;
     private String img;
+    private String description;
 }

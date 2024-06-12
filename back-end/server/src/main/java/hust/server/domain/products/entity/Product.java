@@ -65,14 +65,18 @@ public class Product {
     @Column(name = "has_size")
     private Integer hasSize;
 
+    @Column(length = 500)
+    private String description;
+
     public GuestProductResponse toProductGuestResponse(){
         if (hasSize == 0){
             return GuestProductResponse.builder()
                     .id(this.id)
                     .img(this.img)
                     .name(this.name)
-                    .price(formatCurrency(price))
+                    .priceDisplay(formatCurrency(price))
                     .summary(this.summary)
+                    .description(this.description)
                     .build();
         }
         Long minPrice = sizeList.stream().min(Comparator.comparing(ProductSize::getPrice)).orElseThrow(NoSuchElementException::new).getPrice();
@@ -81,8 +85,9 @@ public class Product {
                 .id(this.id)
                 .img(this.img)
                 .name(this.name)
-                .price(formatCurrency(minPrice) + " - " + formatCurrency(maxPrice))
+                .priceDisplay(formatCurrency(minPrice) + " - " + formatCurrency(maxPrice))
                 .summary(this.summary)
+                .description(this.description)
                 .build();
 
     }
@@ -93,9 +98,11 @@ public class Product {
                     .id(this.id)
                     .img(this.img)
                     .name(this.name)
-                    .price(formatCurrency(this.price))
+                    .priceDisplay(formatCurrency(this.price))
                     .summary(this.summary)
                     .hasSize(this.hasSize)
+                    .description(this.description)
+                    .price(this.price)
                     .build();
         }
         List<SizeResponse> sizeResponses = new ArrayList<>();
@@ -106,6 +113,8 @@ public class Product {
                 .name(this.name)
                 .sizes(sizeResponses)
                 .summary(this.summary)
+                .hasSize(this.hasSize)
+                .description(this.description)
                 .build();
     }
 

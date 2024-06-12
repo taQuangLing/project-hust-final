@@ -12,6 +12,8 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 
+import static hust.server.infrastructure.utilies.Utility.formatCurrency;
+
 @Data
 @Entity
 @Builder
@@ -50,11 +52,11 @@ public class OrderItem extends BaseEntity {
             if (productSize == null)throw new ApiException(MessageCode.ERROR);
             sizeStr = productSize.getSize();
         }
-
+        if (note.isEmpty() || note == null)note = "<none>";
         return GuestOrderItemResponse.builder()
                 .productName(product.getName())
                 .productImg(product.getImg())
-                .productPrice(productPrice + " đ")
+                .productPrice(formatCurrency(productPrice))
                 .quantity(quantity)
                 .hasSize(product.getHasSize())
                 .sizeSelected(sizeStr)

@@ -3,6 +3,7 @@ package hust.server.app.security;
 import hust.server.app.filter.JwtTokenFilter;
 import hust.server.domain.authen.service.UserService;
 import hust.server.infrastructure.utilies.JwtUtil;
+import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @EnableWebSecurity
 @Configuration
@@ -49,8 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         JwtTokenFilter jwtTokenFilter = new JwtTokenFilter(authenticationManager(), jwtUtil);
 
-        HttpSecurity httpSercurity = http.headers()
-                .disable()
+        HttpSecurity httpSercurity = http.headers().disable()
                 .cors()
                 .and()
                 .requestCache()
@@ -69,19 +70,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling();
-        // .authenticationEntryPoint(authenticationEntryPoint());
-
-        // http.csrf().disable()
-        // .authorizeHttpRequests()
-        // .antMatchers("/authenticate")
-        // .permitAll()
-        // .anyRequest()
-        // .authenticated()
-        // .and()
-        // .sessionManagement()
-        // .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        // http.addFilterBefore(jwtRequestFilter,
-        // UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
@@ -122,12 +110,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        configuration.setAllowedOrigins(Collections.unmodifiableList(Arrays.asList("*")));
-        configuration.setAllowedMethods(Collections
-                .unmodifiableList(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")));
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowCredentials(false);
-        configuration.setAllowedHeaders(
-                Collections.unmodifiableList(Arrays.asList("Authorization", "Cache-Control", "Content-Type")));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }

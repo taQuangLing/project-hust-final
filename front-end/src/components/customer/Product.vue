@@ -1,29 +1,31 @@
 <template>
-  <div class="home">
+  <div class="home" v-loading="loading">
     <div class="tab-container">
       <div :class='{ "tab-item": true, "tab-item-active": activeTab === 0 }' @click="activeTab = 0">
         <i class="el-icon-menu" style="font-size: 50px; color: #acacac; margin-bottom: 3px"></i>
         <label>Tất cả</label>
       </div>
-      <div v-for="(category, index) in categories" :key="index"
+      <div v-for="(category, index) in categories" :key="category.id"
         :class='{ "tab-item": true, "tab-item-active": activeTab === index + 1 }' @click="activeTab = index + 1">
-        <img :src="category.image" alt="category.name" />
+        <img :src="category.img" alt="category.name" />
         <label>{{ category.name }}</label>
       </div>
     </div>
     <div class="content-container">
-      <div class="drink" v-for="(drink, index) in drinks" :key="index">
-        <div class="info">
-          <img :src="drink.image" alt="" />
-          <div class="info-detail">
-            <label>{{ drink.name }}</label>
-            <p>{{ drink.sumary }}</p>
-            <span>{{ drink.price }}</span>
+      <div class="drink" v-for="(product, index) in products" :key="product.id">
+        <router-link :to="`/products/${product.id}`">
+          <div class="info">
+            <img :src="product.img" alt="" />
+            <div class="info-detail">
+              <label>{{ product.name }}</label>
+              <p>{{ product.sumary }}</p>
+              <span>{{ product.priceDisplay }}</span>
+            </div>
           </div>
-        </div>
-        <i class="el-icon-plus" @click="showModal = true"></i>
+        </router-link>
+        <i class="el-icon-plus" @click="showPopup(product.id)"></i>
       </div>
-      <AddProductPopup :isPopupVisible="showModal" @close="showModal = false" class="popup"/>
+      <AddProductPopup v-if="showModal" :productId="productId" @close="showModal = false" class="popup" />
     </div>
   </div>
 
@@ -31,7 +33,8 @@
 
 <script>
 import AddProductPopup from './AddProductPopup.vue';
-
+import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
 
 export default {
   components: {
@@ -41,132 +44,51 @@ export default {
     return {
       activeTab: 0,
       showModal: false,
-      categories: [
-        {
-          name: "Trà",
-          image:
-            "https://hoanmy.com/wp-content/uploads/2023/07/cong-dung-cua-tra-1-1200x900.png",
-        },
-        {
-          name: "Cafe",
-          image:
-            "https://oola.vn/wp-content/uploads/2023/03/14.-Ca-phe-nau.png",
-        },
-        {
-          name: "Bánh ngọt",
-          image:
-            "https://bizweb.dktcdn.net/100/438/465/files/banh-ngot-5.jpg?v=1669955176914",
-        },
-        {
-          name: "Bánh ngọt",
-          image:
-            "https://bizweb.dktcdn.net/100/438/465/files/banh-ngot-5.jpg?v=1669955176914",
-        },
-        {
-          name: "Bánh ngọt",
-          image:
-            "https://bizweb.dktcdn.net/100/438/465/files/banh-ngot-5.jpg?v=1669955176914",
-        },
-        {
-          name: "Bánh ngọt",
-          image:
-            "https://bizweb.dktcdn.net/100/438/465/files/banh-ngot-5.jpg?v=1669955176914",
-        },
-        {
-          name: "Bánh ngọt",
-          image:
-            "https://bizweb.dktcdn.net/100/438/465/files/banh-ngot-5.jpg?v=1669955176914",
-        },
-        // Add more categories as needed
-      ],
-      drinks: [
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        {
-          name: "Trà chanh xí muội ",
-          sumary: "Trà chanh tươi thêm xí muội ",
-          price: "24,300 đ",
-          image: "https://honglam.vn/pic/news/3%20(15).png",
-        },
-        // Add more drinks as needed
-      ],
+      loading: true,
+      categories: [],
+      products: [],
+      productId: 0,
     };
+  },
+  methods: {
+    async getCategories() {
+      const branchId = localStorage.getItem('branchId');
+      const code = localStorage.getItem('code');
+
+      await axios.get(this.$store.state.baseUrl + "/guest/v1/menu?" + "branchId=" + branchId + "&code=" + code,
+        { headers: { Authorization: `Bearer ${localStorage.getItem('user')}` } }
+      )
+        .then((response) => {
+          this.categories = response.data.data.categories;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.categories = [];
+        });
+    },
+    getProducts() {
+      this.products = [];
+      if (this.activeTab === 0) {
+        this.prducts = this.categories.map(category => {
+          category.products.map(product => {
+            this.products.push(product);
+          });
+        });
+      } else {
+        this.products = this.categories[this.activeTab - 1].products;
+      }
+    },
+    showPopup(productId) {
+      this.showModal = true;
+      this.productId = productId;
+    },
+  },
+  beforeUpdate() {
+    this.getProducts();
+  },
+  mounted() {
+    this.getCategories();
+    this.loading = false;
   },
 };
 </script>
@@ -175,7 +97,7 @@ export default {
 .content-container>>>.popup {
   .popup-overlay {
     position: fixed;
-    top: 0;
+    bottom: 0;
     left: 0;
     width: 100%;
     height: 100%;
@@ -193,6 +115,7 @@ export default {
     align-items: center;
     flex-direction: column;
     padding: 0 15px 0 15px;
+    overflow-y: auto;
   }
 
   .header {
@@ -283,25 +206,38 @@ export default {
     border-radius: 3px;
   }
 
+  .el-icon-minus, .el-icon-plus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .action .el-icon-minus {
     border: solid 1px #FF902A;
     color: #FF902A;
+    width: 9px;
+    height: 9px;
   }
 
   .action .el-icon-plus {
     background: #FF902A;
     color: #FF902A;
     color: #fff;
+    width: 11px;
+    height: 11px;
   }
 
   .action span {
-    padding: 0 12px 3px 12px;
+    padding: 0 8px 2px 8px;
+    font-size: 15px;
   }
 
   .size {
     width: 100%;
     display: flex;
+    flex-direction: column;
     margin-top: 15px;
+    align-items: start;
   }
 
   .size-item {
@@ -488,9 +424,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 21px;
-  flex: 0 0 60px;
-  height: 35px;
+  font-size: 18px;
+  flex: 0 0 55px;
+  height: 32px;
   font-weight: bold;
   color: #ffffff;
   /* text-shadow: -0.3px -0.3px 0 #ffffff, 0.3px -0.3px 0 #ffffff,

@@ -2,13 +2,12 @@ package hust.server.app.endpoint.rest.auth;
 
 import hust.server.app.exception.ApiException;
 import hust.server.app.service.ResponseFactory;
-import hust.server.domain.authen.dto.request.GuestTokenRequest;
+import hust.server.domain.authen.dto.request.TokenRequest;
 import hust.server.domain.authen.dto.request.UserAccountRequest;
 import hust.server.domain.authen.dto.response.AuthResponse;
 import hust.server.domain.authen.entities.CustomUserDetails;
 import hust.server.domain.authen.service.UserService;
 import hust.server.infrastructure.enums.MessageCode;
-import hust.server.infrastructure.utilies.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth/v1")
+@CrossOrigin("*")
 public class AuthController {
     @Autowired
     private UserService userService;
@@ -36,7 +36,7 @@ public class AuthController {
         }catch(BadCredentialsException e){
             throw new ApiException(MessageCode.ACCOUNT_INCORRECT);
         }
-        return ResponseFactory.response(new AuthResponse(userService.genToken((CustomUserDetails) authenticate.getPrincipal())));
+        return ResponseFactory.response(new AuthResponse(userService.genToken((CustomUserDetails) authenticate.getPrincipal()), ((CustomUserDetails) authenticate.getPrincipal()).getRole()));
     }
 
     @PostMapping("/register")
@@ -46,8 +46,13 @@ public class AuthController {
 
     @GetMapping("/guest-token")
     public ResponseEntity<?> genGuestToken(
-            @RequestParam Long branchId,
+            @RequestParam String code,
             @RequestParam(required = false) Integer tableNumber){
-        return ResponseFactory.response(userService.genGuestToken(branchId));
+        return ResponseFactory.response(userService.genGuestToken(code, tableNumber));
+    }
+
+    @PutMapping("/check-token")
+    public ResponseEntity<?> checkToken(@RequestBody TokenRequest request){
+        return ResponseFactory.response(userService.checkToken(request));
     }
 }

@@ -7,7 +7,8 @@ import lombok.Data;
 @Builder
 public class CustomerCartResponse {
     private String name;
-    private String price;
+    private String priceDisplay;
+    private Long price;
     private Long id;
     private String img;
     private Integer isCheck;

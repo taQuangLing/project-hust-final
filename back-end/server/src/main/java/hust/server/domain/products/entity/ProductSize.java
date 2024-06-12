@@ -34,7 +34,8 @@ public class ProductSize {
         return SizeResponse.builder()
                 .id(this.id)
                 .size(this.size)
-                .price(formatCurrency(this.price))
+                .priceDisplay(formatCurrency(this.price))
+                .price(this.price)
                 .isDefault(this.isDefault)
                 .build();
     }
