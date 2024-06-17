@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static hust.server.infrastructure.utilies.Utility.formatCurrency;
 import static hust.server.infrastructure.utilies.Utility.toLocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
@@ -71,7 +72,7 @@ public class Order extends BaseEntity {
     String code;
 
     @Column(name = "updated_by")
-    Long updatedBy;
+    String updatedBy;
 
     public GuestOrderResponse toGuestOrderResponse(){
         String statusString = null;
@@ -102,17 +103,22 @@ public class Order extends BaseEntity {
 
     public CashierOrderResponse toCashierOrderResponse(){
         String statusString = null;
+        boolean isExpanded;
         switch (status){
             case 0:
+                isExpanded = true;
                 statusString = "Chờ xác nhận";
                 break;
             case 1:
+                isExpanded = true;
                 statusString = "Đang pha chế";
                 break;
             case 2:
-                statusString = "Đã xong";
+                isExpanded = false;
+                statusString = "Hoàn thành";
                 break;
             case 3:
+                isExpanded = false;
                 statusString = "Đã hủy";
                 break;
             default:
@@ -154,7 +160,8 @@ public class Order extends BaseEntity {
                 .isOrderAtTable(isOrderTableString)
                 .payments(paymentsString)
                 .id(id)
-                .total(total + " đ")
+                .total(formatCurrency(total))
+                .isExpanded(isExpanded)
                 .build();
     }
 }

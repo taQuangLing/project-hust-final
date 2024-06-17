@@ -24,6 +24,11 @@ public class CartController {
         return ResponseFactory.response(cartService.addCartItem(request));
     }
 
+    @PostMapping("/cashier/v1/carts")
+    public ResponseEntity<?> addToCartItem(@RequestBody CartItemCreationRequest request){
+        return ResponseFactory.response(cartService.addCartItem(request));
+    }
+
     @PutMapping("/guest/v1/carts/{id}/is_check")
     public ResponseEntity<?> checkCart(@PathVariable Long id,
                                        @RequestBody CheckCartItemRequest request)
@@ -53,8 +58,8 @@ public class CartController {
         return ResponseFactory.response(cartService.deleteCartItem(id));
     }
 
-    @GetMapping("/cashier/v1/carts/{id}")
-    public ResponseEntity<?> cashierGetCarts(@PathVariable(name = "id") String userId){
+    @GetMapping("/cashier/v1/carts")
+    public ResponseEntity<?> cashierGetCarts(@RequestParam(name = "userId") String userId){
         return ResponseFactory.response(cartService.cashierGetCartList(userId));
     }
 

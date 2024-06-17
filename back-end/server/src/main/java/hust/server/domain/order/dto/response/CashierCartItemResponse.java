@@ -7,7 +7,8 @@ import lombok.Data;
 @Builder
 public class CashierCartItemResponse {
     private String name;
-    private String price;
+    private String priceDisplay;
+    private Long price;
     private Long id;
     private Integer quantity;
     private Integer hasSize;

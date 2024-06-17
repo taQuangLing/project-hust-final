@@ -7,13 +7,10 @@
         </router-link>
 
         <router-link to="/cashier/order">
-          <i :class="{
-            'el-icon-shopping-cart-2': true,
-            active: state === 'order',
-          }" @click="state = 'order'"></i>
+          <i :class="{'el-icon-shopping-cart-2': true, active: state === 'order'}" @click="state = 'order'"></i>
         </router-link>
       </div>
-      
+
       <el-dropdown :hide-on-click="false">
         <span class="el-dropdown-link">
           <i class="el-icon-user"></i>
@@ -40,7 +37,6 @@ export default {
   },
   watch: {
     "$route.path": {
-      immediate: true,
       handler(newVal) {
         switch (newVal) {
           case "/cashier/order":

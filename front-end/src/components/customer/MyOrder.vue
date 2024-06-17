@@ -139,6 +139,10 @@ export default {
         margin-bottom: 2px;
     }
 
+    .price {
+        margin-top: 3px;
+    }
+
     .price-display {
         font-size: 16px;
         font-weight: bold;

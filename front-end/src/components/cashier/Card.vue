@@ -1,25 +1,28 @@
 <template>
-  <div>
+  <div @click="addToCart">
     <img :src="product.img" alt="" />
     <span class="name">{{ product.name }}</span>
     <div class="size-price">
-      <el-dropdown trigger="click" @command="handleCommand">
+      <div @click.stop>
+        <el-dropdown trigger="click" @command="handleCommand" v-if="product.hasSize">
         <span class="el-dropdown-link">
-          {{ product.curSize }}
+          {{ size.size }}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command='S'>S</el-dropdown-item>
-          <el-dropdown-item command='M'>M</el-dropdown-item>
-          <el-dropdown-item command='L'>L</el-dropdown-item>
+          <el-dropdown-item :command='size' v-for="size in product.sizes" :key="size.id">{{ size.size }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <span class="price">{{ curPrice }}</span>
+      </div>
+      <span class="price" v-if="!product.hasSize">{{ product.price }}</span>
+      <span class="price" v-if="product.hasSize">{{ size.priceDisplay }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   props: {
     product: {
@@ -28,18 +31,55 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      size: {},
+    };
   },
-  computed: {
-    curPrice() {
-      const result = this.product.price.find(p => p.size === this.product.curSize
-      );
-      return result.value;
-    },
+  mounted() {
+    if (this.product.hasSize) {
+      const size = this.product.sizes.find(item => item.isDefault == 1);
+      this.size = size;
+    }
   },
   methods: {
     handleCommand(item) {
-        this.product.curSize = item;
+      this.size = item;
+    },
+    async addToCart() {
+      let request = {
+        "userId": localStorage.getItem('id'),
+        "quantity": 1,
+        "productId": this.product.id,
+      };
+
+      if (this.product.hasSize) {
+        request.sizeSelectedId = this.size.id;
+      }
+
+      console.log(request);
+      await axios.post(this.$store.state.baseUrl + "/cashier/v1/carts",
+        request,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("user")}`,
+          },
+        }
+      ).then((res) => {
+        if (res.data.code != 2000){
+          this.$message({
+            message: res.data.description,
+            type: 'error'
+          });
+        } else {
+          this.$message({
+            message: 'Thêm thành công',
+            type: 'success'
+          });
+          this.$emit('add-to-cart');
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
     },
   },
 };

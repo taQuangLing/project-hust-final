@@ -75,7 +75,7 @@ public class OrderItem extends BaseEntity {
 
         return CashierOrderItemResponse.builder()
                 .productName(product.getName())
-                .productPrice(productPrice + " đ")
+                .productPrice(formatCurrency(productPrice))
                 .quantity(quantity)
                 .sizeSelected(sizeStr)
                 .note(note)

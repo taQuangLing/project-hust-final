@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -54,21 +55,11 @@ public class CartService {
         return response;
     }
 
-    public List<CashierCartItemResponse> cashierGetCartList(String userId) {
+    public CashierCartResponse cashierGetCartList(String userId) {
         Cart cart = cartRepository.getByUserId(userId).orElse(null);
         if (cart == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "userId = " + userId);
 
-
-        List<CartItem> customerCarts = cart.getCartItemList();
-        customerCarts.sort(new Comparator<CartItem>() {
-            @Override
-            public int compare(CartItem o1, CartItem o2) {
-                return o1.getCreatedAt().compareTo(o2.getCreatedAt());
-            }
-        });
-        List<CashierCartItemResponse> response = new ArrayList<>();
-        customerCarts.forEach(item -> response.add(item.toCashierCartItemResponse()));
-        return response;
+        return cart.toCashierCartResponse();
     }
 
     public MessageCode checkCart(CheckCartItemRequest request) {
@@ -105,7 +96,7 @@ public class CartService {
         }
 
         Product product = productRepository.getById(request.getProductId()).orElse(null);
-        if (product == null)throw new ApiException(MessageCode.ID_NOT_FOUND);
+        if (product == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "productId = " + request.getProductId());
 
         CartItem cartItem = request.toCustomerCartItemEntity();
         cartItem.setProduct(product);
@@ -136,38 +127,31 @@ public class CartService {
         if (order == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "orderId = "+ orderId);
 
         Cart cart = cartRepository.getByUserId(order.getUserId()).orElse(null);
-        if (cart != null)cartRepository.delete(cart);
+        if (cart == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "get Cart by userId = " + order.getUserId());
 
-        Cart cartNew = new Cart();
-        cartNew.setUserId(order.getUserId());
-        cartNew.setPayments(order.getPayments());
-        cartNew.setIsOrderAtTable(order.getIsOrderAtTable());
+        cart.setUserId(order.getUserId());
+        cart.setPayments(order.getPayments());
+        cart.setIsOrderAtTable(order.getIsOrderAtTable());
+        cart.setOrderId(orderId);
         order.getOrderItemList().forEach(item -> {
             CartItem cartItem = new CartItem();
             cartItem.setProduct(item.getProduct());
             cartItem.setQuantity(item.getQuantity());
             cartItem.setSizeSelectedId(item.getSizeSelectedId());
-            cartNew.getCartItemList().add(cartItem);
+            cart.getCartItemList().add(cartItem);
             try {
                 cartItemRepository.save(cartItem);
             }catch (Exception e){
                 throw new ApiException(MessageCode.ERROR);
             }
-            cartNew.getCartItemList().add(cartItem);
+            cart.getCartItemList().add(cartItem);
         });
         try {
-            cartRepository.save(cartNew);
+            cartRepository.save(cart);
         }catch (Exception e){
             throw new ApiException(MessageCode.ERROR);
         }
-        CashierCartResponse response = CashierCartResponse.builder()
-                .cartId(cartNew.getId())
-                .orderId(orderId)
-                .cartItemList(new ArrayList<>())
-                .build();
-        cartNew.getCartItemList().forEach(item -> response.getCartItemList().add(item.toCashierCartItemResponse()));
-
-        return response;
+        return cart.toCashierCartResponse();
     }
 
     public MessageCode deleteCart(String userId) {

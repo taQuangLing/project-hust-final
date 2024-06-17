@@ -6,7 +6,7 @@ import lombok.Data;
 @Builder
 @Data
 public class OrderUpdatedStatusRequest {
-    private Long userId;
+    private String userId;
     private Long id;
     private Integer status;
 }

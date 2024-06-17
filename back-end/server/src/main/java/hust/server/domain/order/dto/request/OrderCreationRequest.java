@@ -13,6 +13,5 @@ public class OrderCreationRequest {
     private Integer isOrderAtTable;
     private List<Long> itemCartList;
     private String userId;
-    private Long branchId;
     private Integer tableNumber;
 }

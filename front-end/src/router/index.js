@@ -23,13 +23,13 @@ export const router = new Router({
           component: () => import('@/components/customer/Details')
         },
         {
-          path: '/carts',
+          path: 'carts',
           name: 'carts',
           component: () => import('@/components/customer/Cart')
         },
         {
           name: 'my-orders',
-          path: '/history',
+          path: 'history',
           component: () => import('@/components/customer/MyOrder')
         },
         {
@@ -48,7 +48,8 @@ export const router = new Router({
           component: () => import('@/components/cashier/Home')
         },
         {
-          path: '/order',
+          name: 'order',
+          path: 'order',
           component: () => import('@/components/cashier/Order')
         },
       ]
@@ -75,7 +76,10 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  const role = jwtDecode(localStorage.getItem('user')).role;
+  const jwt = localStorage.getItem('user');
+  if (jwt == null)next('/login');
+
+  const role = jwtDecode(jwt).role;
 
   if (!requiresAuth && !role){
     next('/login') // redirect to login page if user is not authenticated

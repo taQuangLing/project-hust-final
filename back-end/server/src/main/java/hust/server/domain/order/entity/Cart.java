@@ -1,12 +1,15 @@
 package hust.server.domain.order.entity;
 
 import hust.server.domain.BaseEntity;
+import hust.server.domain.order.dto.response.CashierCartResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
@@ -35,6 +38,15 @@ public class Cart extends BaseEntity {
     @JoinColumn(name = "customer_cart_id")
     List<CartItem> cartItemList = new ArrayList<>();
 
-//    @Column(name = "order_id")
-//    Long orderId;
+    @Column(name = "order_id")
+    Long orderId;
+    public CashierCartResponse toCashierCartResponse(){
+        return CashierCartResponse.builder()
+                .cartItemList(cartItemList.stream().map(CartItem::toCashierCartItemResponse).collect(Collectors.toList()))
+                .payments(payments)
+                .isOrderAtTable(isOrderAtTable)
+                .orderId(orderId)
+                .id(id)
+                .build();
+    }
 }

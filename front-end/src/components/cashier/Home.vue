@@ -1,7 +1,14 @@
 <template>
   <div class="container">
     <div class="left">
-      <TableData :orders="orders" class="table-data" />
+      <TableData class="table-data" 
+        :orders="orders" 
+        :radioStatus="radioStatus"
+        :radioHinhThuc="radioHinhThuc"
+        :searchInput="searchInput"
+        :fromDate="fromDate"
+        :toDate="toDate"  
+      />
     </div>
     <hr style="width: 0">
     <div class="right">
@@ -11,17 +18,17 @@
       </router-link>
       <hr />
       <div class="status">
-        <el-radio v-model="radioStatus" label="1">Tất cả đơn</el-radio>
-        <el-radio v-model="radioStatus" label="2">Chờ xác nhận</el-radio>
-        <el-radio v-model="radioStatus" label="3">Đang pha chế</el-radio>
-        <el-radio v-model="radioStatus" label="4">Hoàn thành</el-radio>
-        <el-radio v-model="radioStatus" label="5">Đã hủy</el-radio>
+        <el-radio v-model="radioStatus" label="0">Tất cả đơn</el-radio>
+        <el-radio v-model="radioStatus" label="Chờ xác nhận">Chờ xác nhận</el-radio>
+        <el-radio v-model="radioStatus" label="Đang pha chế">Đang pha chế</el-radio>
+        <el-radio v-model="radioStatus" label="Hoàn thành">Hoàn thành</el-radio>
+        <el-radio v-model="radioStatus" label="Đã hủy">Đã hủy</el-radio>
       </div>
       <hr />
       <div class="hinh-thuc">
-        <el-radio v-model="radioHinhThuc" label="1">Tất cả</el-radio>
-        <el-radio v-model="radioHinhThuc" label="2">Tại bàn</el-radio>
-        <el-radio v-model="radioHinhThuc" label="3">Mang đi</el-radio>
+        <el-radio v-model="radioHinhThuc" label="0">Tất cả</el-radio>
+        <el-radio v-model="radioHinhThuc" label="Tại bàn">Tại bàn</el-radio>
+        <el-radio v-model="radioHinhThuc" label="Mang đi">Mang đi</el-radio>
       </div>
       <hr />
       <div class="search">
@@ -49,223 +56,52 @@
 </template>
 
 <script>
+import axios from "axios";
 import TableData from "./TableData.vue";
+
 export default {
   components: {
     TableData,
   },
   data() {
     return {
-      radioStatus: "1",
-      radioHinhThuc: "1",
+      radioStatus: "0",
+      radioHinhThuc: "0",
       searchInput: "",
-      fromDate: "",
-      toDate: "",
-      orders: [
-        {
-          "id": 1234,
-          "code": "MX235742893",
-          "datetime": "02/04/2024 10:30:42",
-          "total": "145,000 đ",
-          "hinhThuc": "Tại bàn",
-          "payment": "Tiền mặt",
-          "status": "Chờ xác nhận",
-          "isExpanded": true,
-          items: [
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            },
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            }
-          ]
-        },
-        {
-          "id": 234,
-          "code": "MX235742893",
-          "datetime": "02/04/2024 10:30:42",
-          "total": "145,000 đ",
-          "hinhThuc": "Tại bàn",
-          "payment": "Tiền mặt",
-          "status": "Đang pha chế",
-          "isExpanded": true,
-          items: [
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            },
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            }
-          ]
-        },
-        {
-          "id": 3453,
-          "code": "MX235742893",
-          "datetime": "02/04/2024 10:30:42",
-          "total": "145,000 đ",
-          "hinhThuc": "Tại bàn",
-          "payment": "Tiền mặt",
-          "status": "Đã hủy",
-          "isExpanded": false,
-          items: [
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            },
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            }
-          ]
-        },
-        {
-          "id": 8756,
-          "code": "MX235742893",
-          "datetime": "02/04/2024 10:30:42",
-          "total": "145,000 đ",
-          "hinhThuc": "Tại bàn",
-          "payment": "Tiền mặt",
-          "status": "Hoàn thành",
-          "isExpanded": false,
-          items: [
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            },
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            }
-          ]
-        },
-        {
-          "id": 4564,
-          "code": "MX235742893",
-          "datetime": "02/04/2024 10:30:42",
-          "total": "145,000 đ",
-          "hinhThuc": "Tại bàn",
-          "payment": "Tiền mặt",
-          "status": "Chờ xác nhận",
-          "isExpanded": true,
-          items: [
-            {
-              "id": 265,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            },
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            }
-          ]
-        },
-        {
-          "id": 2754,
-          "code": "MX235742893",
-          "datetime": "02/04/2024 10:30:42",
-          "total": "145,000 đ",
-          "hinhThuc": "Tại bàn",
-          "payment": "Tiền mặt",
-          "status": "Đang pha chế",
-          "isExpanded": true,
-          items: [
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            },
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            }
-          ]
-        },
-        {
-          "id": 68632,
-          "code": "MX235742893",
-          "datetime": "02/04/2024 10:30:42",
-          "total": "145,000 đ",
-          "hinhThuc": "Tại bàn",
-          "payment": "Tiền mặt",
-          "status": "Đã hủy",
-          "isExpanded": false,
-          items: [
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            },
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            }
-          ]
-        },
-        {
-          "id": 75675,
-          "code": "MX235742893",
-          "datetime": "02/04/2024 10:30:42",
-          "total": "145,000 đ",
-          "hinhThuc": "Tại bàn",
-          "payment": "Tiền mặt",
-          "status": "Hoàn thành",
-          "isExpanded": false,
-          items: [
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            },
-            {
-              "id": 63,
-              "name": "Cà phê sữa",
-              "quantity": 2,
-              "price": "45,000 đ",
-            }
-          ]
-        }
-      ]
+      fromDate: this.initDate(),
+      toDate: this.initDate(),
+      orders: [],
     };
   },
   methods: {
-    reset() {
-      this.radioStatus = "1";
-      this.radioHinhThuc = "1";
-      this.searchInput = "";
-      this.fromDate = "";
-      this.toDate = "";
+    initDate() {
+      return new Date().setHours(0, 0, 0, 0);
     },
+    reset() {
+      this.radioStatus = "0";
+      this.radioHinhThuc = "0";
+      this.searchInput = "";
+      this.fromDate = this.initDate();
+      this.toDate = this.initDate();
+    },
+    async getOrders(){
+      await axios.get(this.$store.state.baseUrl + "/cashier/v1/orders/" + localStorage.getItem("id"),
+        { headers: { Authorization: `Bearer ${localStorage.getItem('user')}` } })
+        .then(response => {
+          this.orders = response.data.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   },
+  beforeMount(){
+    this.getOrders();
+    this.interval = setInterval(this.getOrders, 10000);
+  },
+  beforeDestroy(){
+    clearInterval(this.interval);
+  }
 };
 </script>
 
@@ -352,23 +188,37 @@ export default {
   .item {
     display: flex;
     justify-content: right;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     width: 86.8%;
-  }
-
-  .item .name {
-    font-weight: 600;
-    width: 300px;
-    text-align: left;
-    margin-right: 20px;
   }
 
   .item span {
     font-size: 15px;
+    color: #000
+  }
+
+  .item .name {
+    font-weight: 600;
+    min-width: 300px;
+    text-align: left;
+    margin-right: 20px;
+    color: #000000;
+  }
+
+  .quantity {
+    color: #000000;
+    font-weight: 500;
+    width: 100px;
   }
 
   .price {
     width: 120px;
+    color: #313131 !important;
+  }
+
+  .note { 
+    width: 300px;
+    color: #8b8b8b !important;
   }
 
   .order-info {
@@ -427,6 +277,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: 8px;
   }
 
   .el-button {

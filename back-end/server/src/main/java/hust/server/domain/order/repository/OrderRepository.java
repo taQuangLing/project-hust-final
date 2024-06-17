@@ -12,4 +12,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> getByUserId(String userId);
 
     Optional<Order> getById(Long id);
+
+    List<Order> getByBranchId(Long id);
 }

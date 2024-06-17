@@ -21,10 +21,7 @@ import hust.server.infrastructure.enums.MessageCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -75,7 +72,7 @@ public class OrderService {
         order.setIsOrderAtTable(request.getIsOrderAtTable());
         order.setPayments(request.getPayments());
         order.setTableNumber(request.getTableNumber());
-        order.setBranchId(request.getBranchId());
+        order.setBranchId(user.getBranch().getId());
         order.setTotal(total.getAcquire());
         order.setIsCustomerOrder(user.getIsGuest());
 
@@ -116,7 +113,12 @@ public class OrderService {
     }
 
     public List<CashierOrderResponse> getCashierOrder(String userId){
-        List<Order> orders = orderRepository.getByUserId(userId);
+        User user = userRepository.getById(userId).orElse(null);
+        if (user == null)throw new ApiException(MessageCode.ID_NOT_FOUND);
+
+
+        List<Order> orders = orderRepository.getByBranchId(user.getBranch().getId());
+        Collections.sort(orders, Comparator.comparing(Order::getCreatedAt).reversed());
 
         return orders.stream().map(Order::toCashierOrderResponse).collect(Collectors.toList());
     }

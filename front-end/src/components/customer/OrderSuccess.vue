@@ -1,6 +1,6 @@
 <template>
     <div>
-        <i class="el-icon-arrow-left" @click="this.$router.go(-1)"></i>
+        <i class="el-icon-arrow-left" @click="$router.go(-1)"></i>
         <i class="el-icon-success"></i>
         <h1>Đơn hàng của bạn đã thực hiện thành công</h1>
         <h2>Vui lòng đến quầy thu ngân để thực hiện thanh toán</h2>
@@ -28,6 +28,11 @@
     font-size: 18px;
     font-weight: 800;
 }
+
+.el-icon-arrow-left:hover {
+    cursor: pointer;
+}
+
 .el-icon-success {
     font-size: 130px;
     color: #00D89E;

@@ -1,6 +1,8 @@
 package hust.server.domain.products.service;
 
 import hust.server.app.exception.ApiException;
+import hust.server.domain.authen.entities.User;
+import hust.server.domain.authen.repository.UserRepository;
 import hust.server.domain.products.dto.response.*;
 import hust.server.domain.products.entity.Branch;
 import hust.server.domain.products.entity.Category;
@@ -30,6 +32,10 @@ public class MenuService {
 
     @Autowired
     private BranchRepository branchRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     public GuestMenuResponse getMenuForGuest(Long branchId) {
         // Check branch id
         Branch branch = branchRepository.getById(branchId).orElse(null);
@@ -67,17 +73,19 @@ public class MenuService {
         return response;
     }
 
-    public List<CashierCategoryResponse> cashierGetMenu(Long branchId) {
+    public List<CashierCategoryResponse> cashierGetMenu(String userId) {
+        User user = userRepository.getById(userId).orElse(null);
+        if (user == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "userId = " + userId);
         // Check branch id
-        Branch branch = branchRepository.getById(branchId).orElse(null);
-        if (branch == null)throw new ApiException(MessageCode.BRANCH_NOT_EXIST, "BranchId: " + branchId);
+        Branch branch = user.getBranch();
+        if (branch == null)throw new ApiException(MessageCode.BRANCH_NOT_EXIST);
 
-        if (branch.getActive() == 0)throw new ApiException(MessageCode.BRANCH_INACTIVE, "BranchId: " + branchId);
+        if (branch.getActive() == 0)throw new ApiException(MessageCode.BRANCH_INACTIVE, "BranchId: " + branch.getId());
 
-        Menu menu = menuRepository.getByBranchIdAndActive(branchId, 1).orElse(null);
+        Menu menu = menuRepository.getByBranchIdAndActive(branch.getId(), 1).orElse(null);
         if (menu == null)throw new ApiException(MessageCode.MENU_NOT_EXIST);
 
-        List<Product> products = productRepository.getProductMenu(branchId);
+        List<Product> products = productRepository.getProductMenu(branch.getId());
 
         List<Category> categories = categoryRepository.getByActive(1);
 

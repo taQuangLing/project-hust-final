@@ -87,6 +87,7 @@ export default {
                     this.$router.push("/admin");
                     break;
                 case 'user':
+                    this.$router.push("/cashier");
                     break;
             }
         }
@@ -114,7 +115,7 @@ export default {
                 (response) => {
                     if (response.data.role == "ADMIN") {
                         this.$router.push("/admin");
-                    }else if (response.data.role == "USER"){
+                    } else if (response.data.role == "USER") {
                         this.$router.push("/cashier");
                     }
                 },
@@ -186,6 +187,7 @@ export default {
 * {
     box-sizing: border-box;
 }
+
 .login {
     display: flex;
     align-items: center;
