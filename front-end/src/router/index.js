@@ -58,7 +58,7 @@ export const router = new Router({
     {
       path: '/admin',
       component: () => import('@/components/admin/Nav'),
-      // meta: { requiresAuth: true, roles: ['ADMIN'] },
+      meta: { requiresAuth: true, roles: ['ADMIN'] },
       children: [
         {
           name: 'homeAdmin',
@@ -108,27 +108,27 @@ export const router = new Router({
   ]
 })
 
-// router.beforeEach((to, from, next) => {
-//   const publicPages = ['/login', '/register', '/authenticate'];
+router.beforeEach((to, from, next) => {
+  const publicPages = ['/login', '/register', '/authenticate'];
 
-//   console.log(to.path);
-//   if (publicPages.includes(to.path)) {
-//     next();
-//     return;
-//   }
+  console.log(to.path);
+  if (publicPages.includes(to.path)) {
+    next();
+    return;
+  }
 
-//   const jwt = localStorage.getItem('user');
-//   if (jwt == null) next('/login');
+  const jwt = localStorage.getItem('user');
+  if (jwt == null) next('/login');
 
-//   const role = jwtDecode(jwt).role;
+  const role = jwtDecode(jwt).role;
   
-//   const requiresAuth = to.matched.some(record => 
-//     record.meta.requiresAuth && record.meta.roles.includes(role)
-//   )
+  const requiresAuth = to.matched.some(record => 
+    record.meta.requiresAuth && record.meta.roles.includes(role)
+  )
 
-//   if (!requiresAuth) {
-//     next('/login') // redirect to login page if user is not authenticated
-//   } else {
-//     next() // proceed to route
-//   }
-// })
+  if (!requiresAuth) {
+    next('/login') // redirect to login page if user is not authenticated
+  } else {
+    next() // proceed to route
+  }
+})
