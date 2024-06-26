@@ -23,4 +23,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> getProductMenu(Long branchId);
 
     Optional<Product> getById(Long id);
+
+    List<Product> getByCreatedByOrderByActive(String userId);
 }

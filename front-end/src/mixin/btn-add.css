@@ -1,0 +1,24 @@
+.btn-add i {
+    font-size: 18px;
+    margin: 0 7px 0 7px;
+}
+
+.btn-add span {
+    font-size: 14px;
+}
+
+.btn-add button {
+    width: 175px;
+    height: 30px;
+    background-color: white;
+    border: 1px solid #797979;
+    border-radius: 5px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.btn-add button:hover{ 
+    background-color: #ebebeb;
+}

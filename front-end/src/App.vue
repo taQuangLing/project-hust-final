@@ -29,6 +29,10 @@ body {
   all: unset;
 }
 
+button {
+    cursor: pointer;
+}
+
 hr {
   margin: 0;
 }

@@ -53,4 +53,25 @@ public class OrderController {
         request.setId(id);
         return ResponseFactory.response(orderService.updateOrder(request));
     }
+
+    @GetMapping("/admin/v1/orders")
+    public ResponseEntity<?> adminGetOrders(@RequestParam String userId){
+        return ResponseFactory.response(orderService.getOrdersByAdmin(userId));
+    }
+
+    @GetMapping("/admin/v1/orders/{id}")
+    public ResponseEntity<?> adminGetOrderDetails(
+            @PathVariable Long id,
+            @RequestParam String userId
+    ){
+        return ResponseFactory.response(orderService.getOderDetailByAdmin(id, userId));
+    }
+
+    @DeleteMapping("/admin/v1/orders/{id}")
+    public ResponseEntity<?> adminDeleteOrder(
+            @PathVariable Long id,
+            @RequestParam String userId
+    ){
+        return ResponseFactory.response(orderService.deleteOderByAdmin(id, userId));
+    }
 }

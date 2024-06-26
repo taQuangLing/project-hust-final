@@ -2,6 +2,7 @@ package hust.server.domain.order.entity;
 
 import hust.server.app.exception.ApiException;
 import hust.server.domain.BaseEntity;
+import hust.server.domain.order.dto.response.AdminOrderItemResponse;
 import hust.server.domain.order.dto.response.CashierOrderItemResponse;
 import hust.server.domain.order.dto.response.GuestOrderItemResponse;
 import hust.server.domain.products.entity.Product;
@@ -80,6 +81,23 @@ public class OrderItem extends BaseEntity {
                 .sizeSelected(sizeStr)
                 .note(note)
                 .id(id)
+                .build();
+    }
+
+    public AdminOrderItemResponse toAdminOrderItemResponse() {
+        String sizeStr = "";
+        if (product.getHasSize() == 1){
+            ProductSize productSize = product.getSizeList().stream().filter(size -> size.getId().equals(sizeSelectedId)).findAny().orElse(null);
+            if (productSize == null)throw new ApiException(MessageCode.ERROR);
+            sizeStr = productSize.getSize();
+        }
+        return AdminOrderItemResponse.builder()
+                .id(id)
+                .name(product.getName())
+                .price(productPrice)
+                .priceDisplay(formatCurrency(productPrice).substring(0, formatCurrency(productPrice).length() - 2))
+                .quantity(quantity)
+                .size(sizeStr)
                 .build();
     }
 }

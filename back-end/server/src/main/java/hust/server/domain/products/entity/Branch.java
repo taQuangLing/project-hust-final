@@ -1,5 +1,7 @@
 package hust.server.domain.products.entity;
 
+import hust.server.domain.BaseEntity;
+import hust.server.domain.products.dto.response.AdminBranchResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,7 +17,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Branch {
+public class Branch extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
@@ -35,17 +37,19 @@ public class Branch {
     @Column(length = 100)
     private String address;
 
-    @Column(name = "created_at")
-    @CreationTimestamp
-    private Timestamp createdAt;
-
-    @Column(name = "updated_at")
-    @UpdateTimestamp
-    private Timestamp updatedAt;
+    @Column(name = "created_by")
+    private String createdBy;
 
     @Column
     private Integer active;
 
     @Column
     private String code;
+
+    public AdminBranchResponse toAdminBranchResponse() {
+        return AdminBranchResponse.builder()
+                .id(id)
+                .address(address)
+                .build();
+    }
 }

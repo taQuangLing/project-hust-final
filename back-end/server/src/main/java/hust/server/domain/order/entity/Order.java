@@ -2,9 +2,12 @@ package hust.server.domain.order.entity;
 
 import hust.server.app.exception.ApiException;
 import hust.server.domain.BaseEntity;
+import hust.server.domain.order.dto.response.AdminOrderDetailsResponse;
+import hust.server.domain.order.dto.response.AdminOrderResponse;
 import hust.server.domain.order.dto.response.CashierOrderResponse;
 import hust.server.domain.order.dto.response.GuestOrderResponse;
 import hust.server.infrastructure.enums.MessageCode;
+import hust.server.infrastructure.utilies.Utility;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,8 +15,7 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static hust.server.infrastructure.utilies.Utility.formatCurrency;
-import static hust.server.infrastructure.utilies.Utility.toLocalDateTime;
+import static hust.server.infrastructure.utilies.Utility.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -74,94 +76,104 @@ public class Order extends BaseEntity {
     @Column(name = "updated_by")
     String updatedBy;
 
-    public GuestOrderResponse toGuestOrderResponse(){
-        String statusString = null;
-        switch (status){
-            case 0:
-                statusString = "Chờ thanh toán";
-                break;
-            case 1:
-                statusString = "Đang pha chế";
-                break;
-            case 2:
-                statusString = "Đã xong";
-                break;
-            case 3:
-                statusString = "Đã hủy";
-                break;
-            default:
-                break;
-        }
+    @Column
+    String note;
 
+    public GuestOrderResponse toGuestOrderResponse(){
         return GuestOrderResponse.builder()
                 .id(id)
                 .orderAt(toLocalDateTime(createdAt, null))
                 .orderItemList(orderItemList.stream().map(OrderItem::toGuestOrderItemResponse).collect(Collectors.toList()))
-                .status(statusString)
+                .status(convertStatus())
                 .build();
     }
 
     public CashierOrderResponse toCashierOrderResponse(){
-        String statusString = null;
         boolean isExpanded;
         switch (status){
             case 0:
-                isExpanded = true;
-                statusString = "Chờ xác nhận";
-                break;
             case 1:
                 isExpanded = true;
-                statusString = "Đang pha chế";
                 break;
             case 2:
-                isExpanded = false;
-                statusString = "Hoàn thành";
-                break;
             case 3:
                 isExpanded = false;
-                statusString = "Đã hủy";
                 break;
             default:
                 throw new ApiException(MessageCode.ERROR, "status = default");
         }
 
-        String isOrderTableString = null;
-        switch (isOrderAtTable){
-            case 0:
-                isOrderTableString = "Mang đi";
-                break;
-            case 1:
-                isOrderTableString = "Tại bàn";
-                break;
-            default:
-                throw new ApiException(MessageCode.ERROR, "isOrderAtTable = default");
-        }
-
-        String paymentsString = null;
-        switch (payments){
-            case 0:
-                paymentsString = "Tiền mặt";
-                break;
-            case 1:
-                paymentsString = "Chuyển khoản";
-                break;
-            case 2:
-                paymentsString = "VNPay";
-                break;
-            default:
-                throw new ApiException(MessageCode.ERROR, "payment = default");
-        }
-
         return CashierOrderResponse.builder()
                 .orderAt(toLocalDateTime(createdAt, null))
                 .orderItemList(orderItemList.stream().map(OrderItem::toCashierOrderItemResponse).collect(Collectors.toList()))
-                .status(statusString)
+                .status(convertStatus())
                 .code(code)
-                .isOrderAtTable(isOrderTableString)
-                .payments(paymentsString)
+                .isOrderAtTable(convertDelivery())
+                .payments(converPayments())
                 .id(id)
                 .total(formatCurrency(total))
                 .isExpanded(isExpanded)
                 .build();
+    }
+    public AdminOrderResponse toAdminOrderResponse(){
+        return AdminOrderResponse.builder()
+                .id(id)
+                .datetime(toLocalDateTime(createdAt, ""))
+                .payments(converPayments())
+                .status(convertStatus())
+                .total(formatCurrency(total))
+                .branchId(branchId)
+                .note(note)
+                .build();
+    }
+
+    public AdminOrderDetailsResponse toAdminOrderDetailResponse() {
+        return AdminOrderDetailsResponse.builder()
+                .id(id)
+                .datetime(Utility.toLocalDateTime(createdAt, ""))
+                .payments(converPayments())
+                .status(convertStatus())
+                .orderItem(orderItemList.stream().map(OrderItem::toAdminOrderItemResponse).collect(Collectors.toList()))
+                .note(note)
+                .build();
+    }
+
+    private String convertStatus(){
+        switch (status){
+            case 0:
+                return  "Chờ xác nhận";
+            case 1:
+                return "Đang pha chế";
+            case 2:
+                return "Hoàn thành";
+            case 3:
+                return "Đã hủy";
+            default:
+                throw new ApiException(MessageCode.ERROR, "status = default");
+        }
+    }
+
+    private String converPayments(){
+        switch (payments){
+            case 0:
+                return "Tiền mặt";
+            case 1:
+                return "Chuyển khoản";
+            case 2:
+                return "VNPay";
+            default:
+                throw new ApiException(MessageCode.ERROR, "payment = default");
+        }
+    }
+
+    private String convertDelivery(){
+        switch (isOrderAtTable){
+            case 0:
+                return "Mang đi";
+            case 1:
+                return "Tại bàn";
+            default:
+                throw new ApiException(MessageCode.ERROR, "isOrderAtTable = default");
+        }
     }
 }

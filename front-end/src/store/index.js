@@ -7,7 +7,6 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   modules: {
     auth,
-    
   },
   state: {
     baseUrl: "http://localhost:8080/api",

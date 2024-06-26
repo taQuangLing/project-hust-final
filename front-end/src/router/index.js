@@ -1,16 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import {store} from '@/store'
+import { store } from '@/store'
 import { jwtDecode } from "jwt-decode";
 
 Vue.use(Router)
 
 export const router = new Router({
+  // mode: 'history',
   routes: [
     {
       path: '/',
       component: () => import('@/components/customer/Nav'),
-      meta: { requiresAuth: true, roles: ['guest'] },
+      meta: { requiresAuth: true, roles: ['GUEST'] },
       children: [
         {
           path: '/',
@@ -41,7 +42,7 @@ export const router = new Router({
     {
       path: '/cashier',
       component: () => import('@/components/cashier/Nav'),
-      meta: { requiresAuth: true, roles: ['user'] },
+      meta: { requiresAuth: true, roles: ['USER'] },
       children: [
         {
           path: '',
@@ -55,6 +56,43 @@ export const router = new Router({
       ]
     },
     {
+      path: '/admin',
+      component: () => import('@/components/admin/Nav'),
+      meta: { requiresAuth: true, roles: ['ADMIN'] },
+      children: [
+        {
+          name: 'homeAdmin',
+          path: '',
+          component: () => import('@/components/admin/Home')
+        },
+        {
+          name: 'products',
+          path: 'products',
+          component: () => import('@/components/admin/Product')
+        },
+        {
+          name: 'productDetails',
+          path: 'products/:id',
+          component: () => import('@/components/admin/ProductDetails')
+        },
+        {
+          name: 'orderHistory',
+          path: 'order-history',
+          component: () => import('@/components/admin/OrderHistory')
+        },
+        {
+          name: 'employees',
+          path: 'employees',
+          component: () => import('@/components/admin/Employee')
+        },
+        {
+          name: 'branches',
+          path: 'branches',
+          component: () => import('@/components/admin/Branch')
+        }
+      ]
+    },
+    {
       path: '/login',
       component: () => import('@/components/Login')
     },
@@ -62,26 +100,33 @@ export const router = new Router({
       path: '/authenticate',
       component: () => import('@/components/customer/Authen')
     },
+    {
+      path: '/:catchAll(.*)',
+      component: () => import('@/components/NotFoundComponent'),
+      name: 'NotFound'
+    }
   ]
 })
 
 router.beforeEach((to, from, next) => {
   const publicPages = ['/login', '/register', '/authenticate'];
-  const requiresAuth = to.matched.some(record => {
-    record.meta.requiresAuth && record.meta.roles.includes(store.state.role)
-  })
 
+  console.log(to.path);
   if (publicPages.includes(to.path)) {
     next();
     return;
   }
 
   const jwt = localStorage.getItem('user');
-  if (jwt == null)next('/login');
+  if (jwt == null) next('/login');
 
   const role = jwtDecode(jwt).role;
+  
+  const requiresAuth = to.matched.some(record => 
+    record.meta.requiresAuth && record.meta.roles.includes(role)
+  )
 
-  if (!requiresAuth && !role){
+  if (!requiresAuth) {
     next('/login') // redirect to login page if user is not authenticated
   } else {
     next() // proceed to route

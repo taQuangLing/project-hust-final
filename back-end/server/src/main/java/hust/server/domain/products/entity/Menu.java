@@ -1,5 +1,6 @@
 package hust.server.domain.products.entity;
 
+import hust.server.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
 @Table(name = "menu")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Menu {
+public class Menu extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -30,17 +32,16 @@ public class Menu {
     @Column(name = "summary")
     private String summary;
 
-    @Column(name = "created_at")
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
     @Column(name = "active")
     private Integer active;
 
     @Column(name = "slug")
     private String slug;
+
+    @Column(name = "created_by")
+    private String createdBy;
+
+    @OneToMany
+    @JoinColumn(name = "menu_id")
+    private List<MenuItem> menuItemList;
 }

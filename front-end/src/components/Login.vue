@@ -60,6 +60,8 @@
 
 <script>
 // import Google from '../components/icons/Google.vue';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 export default {
     components: {
@@ -73,23 +75,6 @@ export default {
             fullname: '',
             otp: '',
             loading: false,
-        }
-    },
-    computed: {
-        status() {
-            return this.$store.state.auth.status;
-        },
-    },
-    created() {
-        if (this.status.loggedIn) {
-            switch (this.status.role) {
-                case 'admin':
-                    this.$router.push("/admin");
-                    break;
-                case 'user':
-                    this.$router.push("/cashier");
-                    break;
-            }
         }
     },
     methods: {
@@ -113,6 +98,12 @@ export default {
             }
             this.$store.dispatch('auth/login', user).then(
                 (response) => {
+                    console.log(response.code);
+                    if (response.code != 2000){
+                        this.$message.error(response.description);
+                        return false;
+                    }
+
                     if (response.data.role == "ADMIN") {
                         this.$router.push("/admin");
                     } else if (response.data.role == "USER") {
@@ -121,7 +112,7 @@ export default {
                 },
                 (error) => {
                     this.loading = false;
-                    this.$message.error('Tài khoản hoặc mật khẩu không đúng!');
+                    this.$message.error('Lỗi hệ th!');
                 }
             );
         },

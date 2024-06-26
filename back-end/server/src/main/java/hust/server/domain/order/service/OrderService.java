@@ -6,6 +6,8 @@ import hust.server.domain.authen.repository.UserRepository;
 import hust.server.domain.order.dto.request.OrderCreationRequest;
 import hust.server.domain.order.dto.request.OrderUpdateRequest;
 import hust.server.domain.order.dto.request.OrderUpdatedStatusRequest;
+import hust.server.domain.order.dto.response.AdminOrderDetailsResponse;
+import hust.server.domain.order.dto.response.AdminOrderResponse;
 import hust.server.domain.order.dto.response.CashierOrderResponse;
 import hust.server.domain.order.dto.response.GuestOrderResponse;
 import hust.server.domain.order.entity.CartItem;
@@ -15,7 +17,9 @@ import hust.server.domain.order.repository.CartItemRepository;
 import hust.server.domain.order.repository.CartRepository;
 import hust.server.domain.order.repository.OrderItemRepository;
 import hust.server.domain.order.repository.OrderRepository;
+import hust.server.domain.products.entity.Branch;
 import hust.server.domain.products.entity.ProductSize;
+import hust.server.domain.products.repository.BranchRepository;
 import hust.server.domain.products.repository.ProductRepository;
 import hust.server.infrastructure.enums.MessageCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +48,9 @@ public class OrderService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private BranchRepository branchRepository;
 
     public MessageCode createOrder(OrderCreationRequest request) {
         List<OrderItem> orderItemList = new ArrayList<>();
@@ -165,5 +172,46 @@ public class OrderService {
         }catch (Exception e){
             throw new ApiException(e, MessageCode.ERROR);
         }
+    }
+
+    public List<AdminOrderResponse> getOrdersByAdmin(String userId) {
+        List<Order> orderList = orderRepository.getByCreatedBy(userId);
+
+        return orderList.stream().map(item -> {
+            AdminOrderResponse resItem = item.toAdminOrderResponse();
+            Branch branch = branchRepository.getById(item.getBranchId()).orElse(null);
+            if (branch == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "branchId = " + item.getBranchId());
+            resItem.setBranch(branch.getAddress());
+            return resItem;
+        }).collect(Collectors.toList());
+    }
+
+    public AdminOrderDetailsResponse getOderDetailByAdmin(Long id, String userId) {
+        Order order = orderRepository.getById(id).orElse(null);
+        if (order == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "orderId = " + id);
+        checkAuthori(order, userId);
+        AdminOrderDetailsResponse response = order.toAdminOrderDetailResponse();
+        Branch branch = branchRepository.getById(order.getBranchId()).orElse(null);
+        if (branch == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "branchId = " + order.getBranchId());
+        response.setBranch(branch.getAddress());
+        return response;
+    }
+
+    public MessageCode deleteOderByAdmin(Long id, String userId) {
+        Order order = orderRepository.getById(id).orElse(null);
+        if (order == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "orderId = " + id);
+        checkAuthori(order, userId);
+        try{
+            orderRepository.delete(order);
+            return MessageCode.SUCCESS;
+        }catch (Exception e){
+            throw new ApiException(MessageCode.FAIL, e);
+        }
+    }
+
+    private void checkAuthori(Order order, String userId){
+        Branch branch = branchRepository.getById(order.getBranchId()).orElse(null);
+        if (branch == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "branchId = " + order.getBranchId());
+        if (!branch.getCreatedBy().equals(userId))throw new ApiException(MessageCode.RESOURCES_AUTHORIZATION);
     }
 }

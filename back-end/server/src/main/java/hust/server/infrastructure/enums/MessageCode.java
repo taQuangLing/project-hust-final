@@ -24,6 +24,8 @@ public enum MessageCode {
     MENU_NOT_EXIST(4008, "Branch hasn't menu", "Chi nhánh chưa cấu hình menu"),
     TOKEN_EXPIRED(4009, "Token is expired", "Token đã hết hạn"),
     TOKEN_VALIDATE(4010, "Token is validate", "Token hợp lệ"),
+    USERNAME_NOTFOUND(4011, "User name not found", "Tài khoản không hợp lệ"),
+    RESOURCES_AUTHORIZATION(4012, "Resources authorization", "You do not have access to the resource"),
     ;
     private int code;
     private String message;

@@ -23,7 +23,4 @@ public class MenuItem {
 
     @Column(name = "active")
     private Integer active;
-
-    @Column(name = "menu_id")
-    private Long menuId;
 }

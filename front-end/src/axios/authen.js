@@ -4,8 +4,8 @@ import { jwtDecode } from "jwt-decode";
 const API_URL = 'http://localhost:8080/api/auth/v1/';
 
 class AuthService {
-  login(user) {
-    return axios
+  async login(user) {
+    return await axios
       .post(API_URL + 'login', {
         username: user.email,
         password: user.password
@@ -18,6 +18,9 @@ class AuthService {
           localStorage.setItem('id', id);
         }
         return response.data;
+      })
+      .catch(error => {
+        console.log(error);
       });
   }
 
@@ -38,6 +41,7 @@ class AuthService {
       otp: user.otp,
     })
   }
+
 }
 
 export default new AuthService();

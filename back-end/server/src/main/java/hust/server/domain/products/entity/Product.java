@@ -1,9 +1,7 @@
 package hust.server.domain.products.entity;
 
-import hust.server.domain.products.dto.response.CashierProductResponse;
-import hust.server.domain.products.dto.response.GuestProductDetailsResponse;
-import hust.server.domain.products.dto.response.GuestProductResponse;
-import hust.server.domain.products.dto.response.SizeResponse;
+import hust.server.domain.BaseEntity;
+import hust.server.domain.products.dto.response.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +22,7 @@ import static hust.server.infrastructure.utilies.Utility.formatCurrency;
 @Table(name = "products")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -40,14 +38,6 @@ public class Product {
 
     @Column
     private String summary;
-
-    @CreationTimestamp
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @Column
     private Integer active;
@@ -67,6 +57,9 @@ public class Product {
 
     @Column(length = 500)
     private String description;
+
+    @Column(name = "created_by")
+    private String createdBy;
 
     public GuestProductResponse toProductGuestResponse(){
         if (hasSize == 0){
@@ -129,4 +122,25 @@ public class Product {
                 .build();
     }
 
+    public AdminProductResponse toAdminProductResponse() {
+        return AdminProductResponse.builder()
+                .id(id)
+                .img(img)
+                .name(name)
+                .categoryId(categoryId)
+                .priceDisplay(formatCurrency(price))
+                .status(convertActive())
+                .build();
+    }
+
+    private String convertActive(){
+        switch (active){
+            case 0:
+                return "Không hoạt động";
+            case 1:
+                return "Hoạt động";
+            default:
+                return "";
+        }
+    }
 }

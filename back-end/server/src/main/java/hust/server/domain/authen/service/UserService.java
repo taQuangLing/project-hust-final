@@ -1,28 +1,35 @@
 package hust.server.domain.authen.service;
 
 import hust.server.app.exception.ApiException;
+import hust.server.domain.authen.dto.request.EmployeeUpdateRequest;
 import hust.server.domain.authen.dto.request.TokenRequest;
-import hust.server.domain.authen.dto.request.UserAccountRequest;
+import hust.server.domain.authen.dto.request.UserRegisterRequest;
 import hust.server.domain.authen.dto.response.AuthResponse;
+import hust.server.domain.authen.dto.response.EmployeeDetailsResponse;
+import hust.server.domain.authen.dto.response.EmployeeResponse;
 import hust.server.domain.authen.entities.CustomUserDetails;
+import hust.server.domain.authen.entities.Position;
 import hust.server.domain.authen.entities.User;
+import hust.server.domain.authen.repository.PositionRepository;
 import hust.server.domain.authen.repository.UserRepository;
 import hust.server.domain.products.entity.Branch;
 import hust.server.domain.products.repository.BranchRepository;
 import hust.server.infrastructure.enums.MessageCode;
 import hust.server.infrastructure.utilies.JwtUtil;
+import hust.server.infrastructure.utilies.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import javax.mail.Message;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -36,6 +43,9 @@ public class UserService implements UserDetailsService {
     private JwtUtil jwtTokenUntil;
 
     @Autowired
+    private PositionRepository positionRepository;
+
+    @Autowired
     private BranchRepository branchRepository;
 
     private final long GUEST_EXPIRATION = 2 * 30 * 24 * 60;
@@ -47,20 +57,37 @@ public class UserService implements UserDetailsService {
         // Kiểm tra xem user có tồn tại trong database không?
         User user = userRepository.findByUsername(username).orElse(null);
         if (user == null) {
-            throw new UsernameNotFoundException(username);
+            throw new ApiException(MessageCode.USERNAME_NOTFOUND);
         }
         return user.toCustomUserDetails();
     }
 
-    public MessageCode register(UserAccountRequest request){
-        User user = userRepository.findByUsername(request.getUsername()).orElse(null);
+    public MessageCode register(UserRegisterRequest request){
+        User user = userRepository.findByUsername(request.getPhone()).orElse(null);
         if (user != null) {
             throw new ApiException(MessageCode.USERNAME_ALREADY_EXISTS);
         }
+        Branch branch = branchRepository.getById(request.getBranchId()).orElse(null);
+        if (branch == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "branchId = " + request.getBranchId());
+
+        // gen code employee
+        StringBuilder code = new StringBuilder(Utility.concatPrefixWord(branch.getName()));
+        int countEmployee = userRepository.countEmployee(branch.getId());
+        code.append(Utility.padWithZeros(String.valueOf(countEmployee), 6));
 
         User newUser = new User();
-        newUser.setUsername(request.getUsername());
-        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        newUser.setUsername(request.getPhone());
+        newUser.setCode(code.toString());
+        newUser.setPhone(request.getPhone());
+        newUser.setRole("USER");
+        newUser.setPositionId(request.getPositionId());
+        newUser.setBranch(branch);
+        newUser.setEmail(request.getEmail());
+        newUser.setCreatedBy(request.getCreatedBy());
+        newUser.setName(request.getName());
+        newUser.setActive(1);
+        newUser.setIsGuest(0);
+        newUser.setPassword(passwordEncoder.encode(request.getPhone()));
         newUser.setIsGuest(0);
         newUser.setId(UUID.randomUUID().toString());
         // Set other fields of newUser as needed
@@ -95,7 +122,6 @@ public class UserService implements UserDetailsService {
         user.setIsGuest(1);
         user.setActive(1);
         user.setRole("GUEST");
-        user.setCreatedAt(LocalDateTime.now());
         user.setBranch(branch);
         userRepository.save(user);
         AuthResponse response = new AuthResponse();
@@ -115,5 +141,59 @@ public class UserService implements UserDetailsService {
         User user = userRepository.getByIdAndActive(userId, 1).orElse(null);
         if (user == null)return MessageCode.TOKEN_ERROR;
         return MessageCode.TOKEN_VALIDATE;
+    }
+
+    public List<EmployeeResponse> getEmployees(String userId) {
+        List<User> userList = userRepository.getByAdminUserId(userId);
+        return userList.stream().map(item -> {
+            Position position = positionRepository.getById(item.getPositionId()).orElse(null);
+            if (position == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "positionId = " + item.getPositionId());
+            EmployeeResponse resItem = item.toEmployeeResponse();
+            resItem.setPosition(position.getName());
+            return resItem;
+        }).collect(Collectors.toList());
+    }
+
+    public EmployeeDetailsResponse getEmployeeDetails(String id, String userId) {
+        User user = userRepository.getById(id).orElse(null);
+        if (user == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "UserId = " + id);
+        if (!user.getCreatedBy().equals(userId))throw new ApiException(MessageCode.RESOURCES_AUTHORIZATION);
+        return user.toEmployeeDetailsResponse();
+    }
+
+    public MessageCode updateEmployee(String userId, EmployeeUpdateRequest request) {
+        User user = userRepository.getById(request.getId()).orElse(null);
+        if (user == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "UserId = " + request.getId());
+        if (!user.getCreatedBy().equals(userId))throw new ApiException(MessageCode.RESOURCES_AUTHORIZATION);
+        Branch branch = branchRepository.getById(request.getBranchId()).orElse(null);
+        if (branch == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "branchId = " + request.getBranchId());
+
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setActive(request.getStatus());
+        user.setBranch(branch);
+        user.setPositionId(request.getPositionId());
+        user.setPhone(request.getPhone());
+
+        try{
+            userRepository.save(user);
+            return MessageCode.SUCCESS;
+        }
+        catch (Exception e){
+            throw new ApiException(MessageCode.FAIL, e);
+        }
+    }
+
+    public MessageCode deleteEmployee(String id, String userId) {
+        User user = userRepository.getById(id).orElse(null);
+        if (user == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "UserId = " + id);
+        if (!user.getCreatedBy().equals(userId))throw new ApiException(MessageCode.RESOURCES_AUTHORIZATION);
+
+        try {
+            userRepository.delete(user);
+            return MessageCode.SUCCESS;
+        }catch (Exception e){
+            throw new ApiException(MessageCode.FAIL, e);
+        }
     }
 }

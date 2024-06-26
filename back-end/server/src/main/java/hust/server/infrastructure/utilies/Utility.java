@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 
 public class Utility {
@@ -49,28 +50,28 @@ public class Utility {
         return pageable;
     }
     public static LocalDate formatToDate(String date, String form){
-        if (form == null)form = "dd/MM/yyyy";
+        if (form == null || form.isEmpty())form = "dd/MM/yyyy";
         if (date == null)return null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(form);
 
        return LocalDate.parse(date, formatter);
     }
     public static LocalDateTime formatToDateTime(String dateTime, String form){
-        if (form == null)form = "dd/MM/yyyy HH:mm:ss";
+        if (form == null || form.isEmpty())form = "dd/MM/yyyy HH:mm:ss";
         if (dateTime == null)return null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(form);
 
         return LocalDateTime.parse(dateTime, formatter);
     }
     public static String formatDateTimeToString(LocalDateTime dateTime, String form){
-        if (form == null)form = "dd/MM/yyyy HH:mm:ss";
+        if (form == null || form.isEmpty())form = "dd/MM/yyyy HH:mm:ss";
         if (dateTime == null)return null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(form);
 
        return dateTime.format(formatter);
     }
     public static String formatDateTimeToString(LocalDate dateTime, String form){
-        if (form == null)form = "dd/MM/yyyy";
+        if (form == null || form.isEmpty())form = "dd/MM/yyyy";
         if (dateTime == null)return null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(form);
 
@@ -95,7 +96,26 @@ public class Utility {
         return format.format(value);
     }
 
+    public static String concatPrefixWord(String word){
+        String[] words = word.split(" ");
+        StringBuilder result = new StringBuilder();
+        for (String item : words) {
+            result.append(item.charAt(0));
+        }
+
+        return result.toString().toUpperCase().trim(); //
+    }
+
+    public static String padWithZeros(String str, int length){
+        StringBuilder sb = new StringBuilder();
+        while (sb.length() + str.length() < length) {
+            sb.append('0');
+        }
+        sb.append(str);
+        return sb.toString();
+    }
+
     public static void main(String[] args) {
-        System.out.println(getFieldOfSort("add:desc"));
+        System.out.println(padWithZeros("123", 10));
     }
 }

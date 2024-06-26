@@ -3,7 +3,8 @@ package hust.server.app.endpoint.rest.auth;
 import hust.server.app.exception.ApiException;
 import hust.server.app.service.ResponseFactory;
 import hust.server.domain.authen.dto.request.TokenRequest;
-import hust.server.domain.authen.dto.request.UserAccountRequest;
+import hust.server.domain.authen.dto.request.UserAccountLoginRequest;
+import hust.server.domain.authen.dto.request.UserRegisterRequest;
 import hust.server.domain.authen.dto.response.AuthResponse;
 import hust.server.domain.authen.entities.CustomUserDetails;
 import hust.server.domain.authen.service.UserService;
@@ -27,7 +28,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    ResponseEntity<?> login(@RequestBody UserAccountRequest request){
+    ResponseEntity<?> login(@RequestBody UserAccountLoginRequest request){
         Authentication authenticate;
 
         try {
@@ -40,7 +41,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserAccountRequest request) {
+    public ResponseEntity<?> register(@RequestBody UserRegisterRequest request) {
         return ResponseFactory.response(userService.register(request));
     }
 

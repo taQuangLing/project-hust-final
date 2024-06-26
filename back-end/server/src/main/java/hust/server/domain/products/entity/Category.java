@@ -1,5 +1,7 @@
 package hust.server.domain.products.entity;
 
+import hust.server.domain.BaseEntity;
+import hust.server.domain.products.dto.response.AdminCategoryResponse;
 import hust.server.domain.products.dto.response.CashierCategoryResponse;
 import hust.server.domain.products.dto.response.GuestCategoryResponse;
 import lombok.AllArgsConstructor;
@@ -16,9 +18,9 @@ import java.util.ArrayList;
 @Table(name = "categories")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+public class Category extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column
@@ -32,6 +34,9 @@ public class Category {
 
     @Column
     private Integer active;
+
+    @Column(name = "created_by")
+    private String createdBy;
 
     public GuestCategoryResponse toCategoryGuestResponse(){
         return GuestCategoryResponse.builder()
@@ -48,6 +53,13 @@ public class Category {
                 .name(this.name)
                 .img(this.img)
                 .products(new ArrayList<>())
+                .build();
+    }
+
+    public AdminCategoryResponse toAdminCategoryResponse() {
+        return AdminCategoryResponse.builder()
+                .id(id)
+                .name(name)
                 .build();
     }
 }
