@@ -71,7 +71,7 @@ export const router = new Router({
           component: () => import('@/components/admin/Product')
         },
         {
-          name: 'productDetails',
+          name: 'AdminProductDetails',
           path: 'products/:id',
           component: () => import('@/components/admin/ProductDetails')
         },
@@ -111,7 +111,6 @@ export const router = new Router({
 router.beforeEach((to, from, next) => {
   const publicPages = ['/login', '/register', '/authenticate'];
 
-  console.log(to.path);
   if (publicPages.includes(to.path)) {
     next();
     return;

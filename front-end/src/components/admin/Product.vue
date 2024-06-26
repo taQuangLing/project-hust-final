@@ -62,8 +62,10 @@
                 </el-table-column>
             </el-table>
         </div>
-        <AddProductPopup  v-if="showAddProductPopup" class="add-product-popup" @close="showAddProductPopup = false" @productCreated="createProduct"/>
-        <AddCategoryPopup  v-if="showAddCategoryPopup" class="add-category-popup" @close="showAddCategoryPopup = false" @categoryCreated="createCategory"/>
+        <AddProductPopup v-if="showAddProductPopup" class="add-product-popup" @close="showAddProductPopup = false"
+            @productCreated="createProduct" />
+        <AddCategoryPopup v-if="showAddCategoryPopup" class="add-category-popup" @close="showAddCategoryPopup = false"
+            @categoryCreated="createCategory" />
     </div>
 </template>
 
@@ -159,21 +161,39 @@ export default {
             this.categorySelectedId = 0;
         },
         handleCommandItem(command) {
-            switch(command.action){
+            switch (command.action) {
                 case "edit":
+                    this.$router.push({ name: "AdminProductDetails", params: { id: command.row.id } });
                     break;
                 case "delete":
+                    this.deleteProduct(command.row.id);
                     break;
             }
         },
         setPage(val) {
             this.page = val
         },
-        createProduct(){
+        deleteProduct(id) {
+            console.log(id);
+            axios.delete(this.$store.state.baseUrl + "/admin/v1/products/" + id + "?userId=" + localStorage.getItem("id"),
+                {
+                    headers: { Authorization: "Bearer " + localStorage.getItem("user") }
+                }).then((response) => {
+                    if (response.data.code != 2000 || response.data.code == 4012) {
+                        this.$message.error(response.data.description);
+                        return;
+                    }
+                    this.$message.success("Xóa sản phẩm thành công");
+                    this.getProducts();
+                }).catch((error) => {
+                    console.log(error);
+                })
+        },
+        createProduct() {
             this.getProducts();
             this.showAddProductPopup = false;
         },
-        createCategory(){
+        createCategory() {
             this.showAddCategoryPopup = false;
         }
     },
@@ -202,12 +222,12 @@ export default {
     justify-content: end;
 }
 
-.main>>>.add-product-popup{
+.main>>>.add-product-popup {
     .product-popup {
         width: 40%;
         height: 70%;
         min-width: 650px;
-        min-height: 600px;
+        min-height: 620px;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -229,6 +249,7 @@ export default {
         border-bottom: 1px solid rgb(177, 177, 177);
         margin: 0 20px 0 20px;
     }
+
     .info {
         display: flex;
         flex-direction: column;
@@ -244,7 +265,7 @@ export default {
         display: flex;
         justify-content: space-between;
         width: 100%;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
     }
 
     .name span,
@@ -260,13 +281,13 @@ export default {
     }
 
     .description span {
-        padding-bottom: 55px;
+        padding-bottom: 100px;
     }
 
     .name .el-input,
     .description .el-textarea,
     .category-filter .el-dropdown,
-    .img .upload-demo{
+    .img .upload-demo {
         width: 73%;
         border-radius: 5px;
     }
@@ -274,10 +295,10 @@ export default {
     textarea {
         font-family: 'sarabun';
         font-size: 15px;
-        height: 80px;
+        height: 120px;
     }
 
-    .upload-demo{
+    .upload-demo {
         text-align: left;
     }
 
@@ -321,7 +342,7 @@ export default {
     }
 }
 
-.main>>>.add-category-popup{
+.main>>>.add-category-popup {
     .category-popup {
         width: 40%;
         height: 70%;
@@ -378,12 +399,12 @@ export default {
     }
 
     .description span {
-        padding-bottom: 55px;
+        padding-bottom: 100px;
     }
 
     .name .el-input,
     .description .el-textarea,
-    .img .upload-demo{
+    .img .upload-demo {
         width: 73%;
         border-radius: 5px;
     }
@@ -391,10 +412,10 @@ export default {
     textarea {
         font-family: 'sarabun';
         font-size: 15px;
-        height: 80px;
+        height: 120px;
     }
 
-    .upload-demo{
+    .upload-demo {
         text-align: left;
     }
 
@@ -422,7 +443,7 @@ export default {
     .save:hover {
         background-color: #f5f5f5;
     }
-    
+
 }
 
 

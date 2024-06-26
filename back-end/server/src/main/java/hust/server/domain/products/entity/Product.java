@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static hust.server.infrastructure.utilies.Utility.formatCurrency;
+import static hust.server.infrastructure.utilies.Utility.*;
 
 @Data
 @Entity
@@ -142,5 +142,21 @@ public class Product extends BaseEntity {
             default:
                 return "";
         }
+    }
+
+    public AdminProductDetailsResponse toAdminProductDetailsResponse() {
+        return AdminProductDetailsResponse.builder()
+                .id(id)
+                .name(name)
+                .categoryId(categoryId)
+                .description(description)
+                .status(active)
+                .price(price)
+                .statusDis(convertActive())
+                .img(img)
+                .createdAt(toLocalDateTime(createdAt, ""))
+                .hasSize(hasSize)
+                .sizeResponseList(sizeList.stream().map(ProductSize::toSizeResponse).collect(Collectors.toList()))
+                .build();
     }
 }

@@ -2,7 +2,7 @@
     <el-row class="tac">
         <el-col :span="12">
             <img src="../../assets/logo.png" alt="">
-            <el-menu default-active="1" class="el-menu-vertical-demo">
+            <el-menu :default-active="index" class="el-menu-vertical-demo">
                 <router-link to="/admin">
                     <el-menu-item index="1">
                         <i class="el-icon-s-home"></i>
@@ -55,9 +55,32 @@
 
 <script>
 export default {
+    data() {
+        return {
+            index: "",
+        };
+    },
     methods: {
     },
-
+    mounted(){
+        switch (this.$route.path) {
+            case "/admin":
+                this.index = 1;
+                break;
+            case "/admin/order-history":
+                this.index = 2;
+                break;
+            case "/admin/employees":
+                this.index = 3;
+                break;
+            case "/admin/branches":
+                this.index = 4;
+                break;
+            case "/admin/products":
+                this.index = 5;
+                break;
+        }
+    },
 }
 </script>
 

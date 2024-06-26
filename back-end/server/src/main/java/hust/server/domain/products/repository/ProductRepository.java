@@ -25,4 +25,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> getById(Long id);
 
     List<Product> getByCreatedByOrderByActive(String userId);
+
+    Optional<Product> getByIdAndCreatedBy(Long id, String createdBy);
 }

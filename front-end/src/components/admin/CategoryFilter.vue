@@ -55,7 +55,6 @@ export default {
     },
     async mounted() {
         await this.getCategories();
-        console.log("chekc");
     }
 }
 
@@ -71,13 +70,13 @@ export default {
     width: 150px;
     border: 1px solid #DCDFE6;
     border-radius: 7px;
+    font-size: 15px;
     height: 30px;
     background: white;
 }
 
 .category-filter .title {
-    color: rgb(41, 41, 41);
-    font-size: 14px;
+    color: #575757;
     margin-right: 5px;
 }
 

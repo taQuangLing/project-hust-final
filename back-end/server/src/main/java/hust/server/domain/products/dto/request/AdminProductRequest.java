@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -25,6 +27,8 @@ public class AdminProductRequest {
                 .img(img)
                 .categoryId(categoryId)
                 .active(1)
+                .sizeList(new ArrayList<>())
+                .hasSize(0)
                 .build();
     }
 }
