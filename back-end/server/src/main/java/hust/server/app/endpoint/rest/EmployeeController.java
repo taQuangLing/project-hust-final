@@ -39,4 +39,9 @@ public class EmployeeController {
             @RequestParam String userId){
         return ResponseFactory.response(userService.deleteEmployee(id, userId));
     }
+
+    @GetMapping("/admin/v1/employees/manager")
+    public ResponseEntity<?> getEmployeeManager(@RequestParam String userId){
+        return ResponseFactory.response(userService.getEmployeeManager(userId));
+    }
 }

@@ -164,24 +164,31 @@ export default {
             }
         },
         deleteEmployee(id) {
-            axios.delete(this.$store.state.baseUrl + "/admin/v1/employees/" + id + "?userId=" + localStorage.getItem("id"),
-                {
-                    headers: { Authorization: "Bearer " + localStorage.getItem("user") }
-                }
-            ).then(res => {
-                if (res.data.code != 2000) {
-                    this.$message.error(res.data.message);
-                } else {
-                    this.$message.success("Xóa thành công");
-                    this.getEmployees();
-                }
+            this.$confirm('Bạn có chắc chắn muốn xóa?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning',
+                title: 'Confirm'
+            }).then(() => {
+                axios.delete(this.$store.state.baseUrl + "/admin/v1/employees/" + id + "?userId=" + localStorage.getItem("id"),
+                    {
+                        headers: { Authorization: "Bearer " + localStorage.getItem("user") }
+                    }
+                ).then(res => {
+                    if (res.data.code != 2000) {
+                        this.$message.error(res.data.message);
+                    } else {
+                        this.$message.success("Xóa thành công");
+                        this.getEmployees();
+                    }
+                })
+                    .catch(err => {
+                        console.log(err);
+                    });
             })
-                .catch(err => {
-                    console.log(err);
-                });
+
         },
         selectStatus(e) {
-            console.log(e);
             this.statusSelected = e;
         }
     },
@@ -195,7 +202,7 @@ export default {
 <style scoped>
 @import '../../mixin/pagination.css';
 @import '../../mixin/btn-add.css';
-@import '../../mixin/refresh-btn.css'; 
+@import '../../mixin/refresh-btn.css';
 
 
 .add-popup,
@@ -480,6 +487,7 @@ export default {
     height: 100%;
     margin: 0 20px 0 20px;
 }
+
 .el-table {
     height: 100%;
     overflow-y: auto;

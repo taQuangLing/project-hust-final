@@ -8,4 +8,9 @@ import lombok.Data;
 public class AdminBranchResponse {
     private Long id;
     private String address;
+    private String name;
+    private String createdAt;
+    private String phoneManager;
+    private String manager;
+    private String status;
 }

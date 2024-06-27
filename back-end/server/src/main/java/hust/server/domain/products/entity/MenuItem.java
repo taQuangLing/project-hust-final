@@ -1,5 +1,7 @@
 package hust.server.domain.products.entity;
 
+import hust.server.domain.products.dto.response.AdminMenuItemResponse;
+import hust.server.domain.products.dto.response.AdminMenuResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +25,11 @@ public class MenuItem {
 
     @Column(name = "active")
     private Integer active;
+
+    public AdminMenuItemResponse toAdminMenuItemResponse(){
+        return AdminMenuItemResponse.builder()
+                .id(id)
+                .active(active == 1)
+                .build();
+    }
 }

@@ -189,11 +189,17 @@ public class UserService implements UserDetailsService {
         if (user == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "UserId = " + id);
         if (!user.getCreatedBy().equals(userId))throw new ApiException(MessageCode.RESOURCES_AUTHORIZATION);
 
+        user.setActive(0);
         try {
-            userRepository.delete(user);
+            userRepository.save(user);
             return MessageCode.SUCCESS;
         }catch (Exception e){
             throw new ApiException(MessageCode.FAIL, e);
         }
+    }
+
+    public List<EmployeeResponse> getEmployeeManager(String userId) {
+        List<User> userList = userRepository.getManagerUserList(userId);
+        return userList.stream().map(User::toEmployeeResponse).collect(Collectors.toList());
     }
 }

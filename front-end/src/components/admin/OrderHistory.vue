@@ -38,6 +38,8 @@
         </div>
         <div class="table">
             <el-table :data="ordersResult" stripe style="width: 100%" ref="table" :cell-style='statusStyle'>
+                <el-table-column prop="id" label="ID" width="100">
+                </el-table-column>
                 <el-table-column prop="datetime" label="Thời gian" width="200">
                 </el-table-column>
                 <el-table-column prop="branch" label="Chi nhánh" width="450">
@@ -185,7 +187,7 @@ export default {
             this.branchSelectedId = branch.id;
         },
         statusStyle(cell) {
-            if (cell.columnIndex === 3) {
+            if (cell.columnIndex === 4) {
                 if (cell.row.status === "Chờ xác nhận") {
                     return { color: "#FFA500" };
                 }

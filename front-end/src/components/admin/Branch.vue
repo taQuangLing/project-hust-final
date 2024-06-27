@@ -7,46 +7,33 @@
                     <span>Thêm chi nhánh mới</span>
                 </button>
             </div>
-            <el-input placeholder="Tên chi nhánh..." v-model="branch">
+            <el-input placeholder="Tên chi nhánh..." v-model="branchSearch">
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
 
-            <StatusFilter
-                :statusSelected="statusSelected"
-                @status="selectStatus"
-            />
+            <StatusFilter :statusSelected="statusSelected" @status="selectStatus" />
             <div class="reset">
-                <el-button icon="el-icon-refresh-left" @click="reset"
-                    >Làm mới</el-button
-                >
+                <el-button icon="el-icon-refresh-left" @click="reset">Làm mới</el-button>
             </div>
         </div>
         <div class="pagination">
-            <el-pagination
-                :page-size="pageSize"
-                layout="prev, pager, next"
-                :total="length"
-                @current-change="setPage"
-            ></el-pagination>
-            <span class="record-count"
-                >{{ (page - 1) * pageSize + 1 }}-{{
+            <el-pagination :page-size="pageSize" layout="prev, pager, next" :total="length"
+                @current-change="setPage"></el-pagination>
+            <span class="record-count">{{ (page - 1) * pageSize + 1 }}-{{
                     Math.min(length, page * pageSize)
-                }}/{{ length }} bản ghi</span
-            >
+                }}/{{ length }} bản ghi</span>
         </div>
         <div class="table">
-            <el-table
-                :data="branchList"
-                stripe
-                style="width: 100%"
-                ref="table"
-                :cell-style="statusStyle"
-            >
-                <el-table-column prop="createdAt" label="Ngày tạo" width="170">
+            <el-table :data="branchesResult" stripe style="width: 100%" ref="table" :cell-style="statusStyle">
+                <el-table-column prop="id" label="ID" width="100">
                 </el-table-column>
-                <el-table-column prop="branch" label="Chi nhánh" width="420">
+                <el-table-column prop="createdAt" label="Ngày tạo" width="190">
                 </el-table-column>
-                <el-table-column prop="phoneNumber" label="Số điện thoại">
+                <el-table-column prop="name" label="Tên chi nhánh" width="200">
+                </el-table-column>
+                <el-table-column prop="address" label="Địa chỉ" width="400">
+                </el-table-column>
+                <el-table-column prop="phoneManager" label="Số điện thoại">
                 </el-table-column>
                 <el-table-column prop="manager" label="Quản lý">
                 </el-table-column>
@@ -54,50 +41,29 @@
                 </el-table-column>
                 <el-table-column label="Hành động">
                     <template slot-scope="scope">
-                        <el-dropdown
-                            @command="handleCommandItem"
-                            trigger="click"
-                        >
+                        <el-dropdown @command="handleCommandItem" trigger="click">
                             <span class="el-dropdown-link">
-                                Hành động<i
-                                    class="el-icon-arrow-down el-icon--right"
-                                ></i>
+                                Hành động<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item
-                                    :command="{
-                                        action: 'edit',
-                                        index: scope.$index,
-                                        row: scope.row,
-                                    }"
-                                    >Chỉnh sửa</el-dropdown-item
-                                >
-                                <el-dropdown-item
-                                    :command="{
-                                        action: 'delete',
-                                        index: scope.$index,
-                                        row: scope.row,
-                                    }"
-                                    >Xóa</el-dropdown-item
-                                >
+                                <el-dropdown-item :command="{
+                    action: 'edit',
+                    index: scope.$index,
+                    row: scope.row,
+                }">Chỉnh sửa</el-dropdown-item>
+                                <el-dropdown-item :command="{
+                    action: 'delete',
+                    index: scope.$index,
+                    row: scope.row,
+                }">Xóa</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
-        <AddEmployee
-            v-if="showAddPopup"
-            class="add-popup"
-            @close="showAddPopup = false"
-            @userCreated="createdUser()"
-        />
-        <AddBranch
-            v-if="showAddPopup"
-            class="add-popup"
-            @close="showAddPopup = false"
-            @branchCreated="createdBranch()"
-        />
+        <AddBranch v-if="showAddPopup" class="add-popup" @close="showAddPopup = false"
+            @branchCreated="createdBranch" />
     </div>
 </template>
 
@@ -116,29 +82,106 @@ export default {
     data() {
         return {
             branchSelectedId: 0,
-            createdAt: new Date(),
-            phoneNumber: '0902112312321',
             statusSelected: '<none>',
-            branch: 'Hello Ling',
-            manager: 'Linh Ta',
+            branchSearch: "",
             page: 1,
             pageSize: 20,
             length: 0,
             showAddPopup: false,
-            showEditPopup: false,
             employeeId: 0,
-            branchList: [
-                {
-                    createdAt: new Date(),
-                    phoneNumber: '0902112312321',
-                    statusSelected: '<none>',
-                    branch: 'Hello Ling',
-                    manager: 'Linh Ta',
-                    status: 'Good',
-                },
-            ],
+            branchList: [],
         };
     },
+    computed: {
+        branchesResult(){
+            let branches = this.branchList.filter((branch) => {
+                return branch.name.toLowerCase().includes(this.branchSearch.toLowerCase()) &&
+                    (this.statusSelected === "<none>" || branch.status === this.statusSelected);
+            });
+
+            return branches;
+        }
+    },
+    methods: {
+        getBranches() {
+            axios.get(this.$store.state.baseUrl + "/admin/v1/branches?userId=" + localStorage.getItem("id"),
+                {
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem("user"),
+                    }
+                }
+            ).then((response) => {
+                if(response.data.code != 2000){
+                    this.$message.error(response.data.description);
+                    return;
+                }
+                this.branchList = response.data.data;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        },
+        selectStatus(e){
+            this.statusSelected = e;
+        },
+        reset(){
+            this.branchSearch = "";
+            this.statusSelected = "<none>";
+        },
+        setPage(val) {
+            this.page = val
+        },
+        statusStyle(cell) {
+            if (cell.columnIndex === 6) {
+                switch (cell.row.status) {
+                    case "Hoạt động":
+                        return { color: "#00d306" };
+                    case "Không hoạt động":
+                        return { color: "#bda014" };
+                    default:
+                        return {};
+                }
+            }
+        },
+        handleCommandItem(param) {
+            switch (param.action) {
+                case "edit":
+                    this.$router.push({ name: "branchDetails", params: { id: param.row.id } });
+                    break;
+                case "delete":
+                    this.deleteBranch(param.row.id);
+                    break;
+            }
+        },
+        deleteBranch(id){
+            this.$confirm('Bạn có chắc chắn muốn xóa?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning',
+                title: 'Confirm'
+            }).then(() => {
+                axios.delete(this.$store.state.baseUrl + "/admin/v1/branches/" + id  + "?userId=" + localStorage.getItem("id"),
+                    {
+                        headers: {Authorization: "Bearer " + localStorage.getItem("user")}
+                    }
+                ).then((response) => {
+                    if(response.data.code != 2000){
+                        this.$message.error(response.data.description);
+                        return;
+                    }
+                    this.$message.success("Xóa thành công");
+                    this.getBranches();
+                })
+            })
+        },
+        createdBranch(e){
+            this.getBranches();
+            this.showAddPopup = false;
+        }
+    },
+    mounted() {
+        this.getBranches();
+    }
 };
 </script>
 
@@ -159,7 +202,7 @@ export default {
     justify-content: end;
 }
 
-.main >>> .add-popup {
+.main>>>.add-popup {
     .add-branch {
         width: 40%;
         height: 70%;
@@ -193,7 +236,7 @@ export default {
         align-items: start;
         padding: 30px 120px 20px 120px;
         justify-content: space-between;
-        gap: 20px;
+        gap: 25px;
     }
 
     .name,
@@ -201,9 +244,8 @@ export default {
     .city,
     .district,
     .email,
-    .branch-filter,
-    .img,
-    .position-filter {
+    .manager-filter,
+    .img {
         display: flex;
         justify-content: space-between;
         width: 100%;
@@ -214,9 +256,8 @@ export default {
     .city span,
     .district span,
     .email span,
-    .img span,
-    .branch-filter .title,
-    .position-filter .title {
+    .manager-filter .title,
+    .img .title {
         text-align: left;
         font-size: 15px;
         color: #575757;
@@ -229,10 +270,14 @@ export default {
     .city .el-input,
     .district .el-input,
     .email .el-input,
-    .branch-filter .el-dropdown,
-    .position-filter .el-dropdown {
+    .manager-filter .el-dropdown,
+    .upload-demo {
         width: 68%;
         border-radius: 5px;
+    }
+
+    .upload-demo {
+        text-align: left;
     }
 
     .name input,
@@ -240,6 +285,12 @@ export default {
     .email input {
         border: 1px solid #dcdfe6;
         font-size: 15px;
+    }
+
+    .img .title {
+        display: flex;
+        align-items: start;
+        padding-top: 5px;
     }
 
     .action {
@@ -297,7 +348,7 @@ export default {
     border: #000000;
 }
 
->>> .el-input__inner {
+>>>.el-input__inner {
     height: 30px;
     border-radius: 5px;
     font-size: 14px;
@@ -320,6 +371,7 @@ export default {
     height: 100%;
     margin: 0 20px 0 20px;
 }
+
 .el-table {
     height: 100%;
     overflow-y: auto;
@@ -332,7 +384,7 @@ export default {
     grid-template-rows: 55px 33px;
 }
 
->>> .cell {
+>>>.cell {
     text-align: center;
 }
 

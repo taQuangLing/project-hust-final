@@ -1,7 +1,10 @@
 package hust.server.domain.products.entity;
 
 import hust.server.domain.BaseEntity;
+import hust.server.domain.products.dto.response.AdminBranchDetailsResponse;
+import hust.server.domain.products.dto.response.AdminBranchFilterResponse;
 import hust.server.domain.products.dto.response.AdminBranchResponse;
+import hust.server.infrastructure.utilies.Utility;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,13 +29,11 @@ public class Branch extends BaseEntity {
     private String name;
 
     @Column(length = 50)
-    private String province;
+    private String town;
 
     @Column(length = 50)
     private String city;
 
-    @Column(length = 50)
-    private String country;
 
     @Column(length = 100)
     private String address;
@@ -44,12 +45,54 @@ public class Branch extends BaseEntity {
     private Integer active;
 
     @Column
+    private String logo;
+
+    @Column
+    private String qrcode;
+
+    @Column
     private String code;
 
     public AdminBranchResponse toAdminBranchResponse() {
         return AdminBranchResponse.builder()
                 .id(id)
                 .address(address)
+                .name(name)
+                .createdAt(Utility.toLocalDateTime(createdAt, ""))
+                .status(convertStatus())
+                .build();
+    }
+    public AdminBranchFilterResponse toAdminBranchFilterResponse() {
+        return AdminBranchFilterResponse.builder()
+                .id(id)
+                .address(address)
+                .build();
+    }
+
+    private String convertStatus(){
+        switch (active) {
+            case 0:
+                return "Không hoạt động";
+            case 1:
+                return "Hoạt động";
+            default:
+                return "";
+        }
+    }
+
+    public AdminBranchDetailsResponse toAdminBranchDetailResponse() {
+        return AdminBranchDetailsResponse.builder()
+                .id(id)
+                .name(name)
+                .address(address)
+                .city(city)
+                .town(town)
+                .status(active)
+                .statusDis(convertStatus())
+                .logo(logo)
+                .code(code)
+                .qrcode(qrcode)
+                .createdAt(Utility.toLocalDateTime(createdAt, ""))
                 .build();
     }
 }

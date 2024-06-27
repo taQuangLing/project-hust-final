@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,4 +28,19 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query(value = "SELECT COUNT(*) FROM users WHERE branch_id = :branchId", nativeQuery = true)
     int countEmployee(Long branchId);
+
+    @Query(value = "select users.* from users, positions where " +
+            "users.branch_id = :id and " +
+            "positions.id = users.position_id and " +
+            "positions.name = \"Quản lý\" and " +
+            "users.active = 1 ", nativeQuery = true)
+    List<User> getManagerUser(Long id);
+
+    @Query(value = "select users.* from users, positions where " +
+            "users.position_id = positions.id and " +
+            "positions.name = \"Quản lý\" and " +
+            "users.created_by = :userId and " +
+            "users.active = 1 ", nativeQuery = true
+    )
+    List<User> getManagerUserList(String userId);
 }

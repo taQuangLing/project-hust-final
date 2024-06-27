@@ -74,7 +74,6 @@
 <script>
 import axios from 'axios';
 import CategoryFilter from './CategoryFilter.vue';
-const cityOptions = ['Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen'];
 
 export default {
     components: {
@@ -92,8 +91,6 @@ export default {
             hasSize: 0,
             price: 0,
             checkAll: false,
-            checkedCities: ['Shanghai', 'Beijing'],
-            cities: cityOptions,
             isIndeterminate: true,
             sizeList: [],
         }
@@ -177,7 +174,7 @@ export default {
                     this.$message.error(res.data.message);
                     return;
                 }
-                this.$message.success("Cập nhật sản phẩm thành công");
+                this.$message.success("Cập nhật thành công");
                 this.$router.push({ name: 'products' });
             }).catch(err => {
                 console.log(err);
@@ -198,15 +195,6 @@ export default {
         onSuccess(e) {
             this.img = e.url;
             this.updateProduct();
-        },
-        handleCheckAllChange(val) {
-            this.checkedCities = val ? cityOptions : [];
-            this.isIndeterminate = false;
-        },
-        handleCheckedCitiesChange(value) {
-            let checkedCount = value.length;
-            this.checkAll = checkedCount === this.cities.length;
-            this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
         },
         addSize() {
             if (this.sizeList.filter(item => item.size == "").length == 0)
@@ -351,10 +339,18 @@ export default {
 }
 
 .wrapper {
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: start;
-    padding: 30px 50px 0 50px;
+    padding: 30px;
+    margin: 15px 40px 10px 40px;
+    gap: 20px;
+    overflow-y: auto;
+    /* border-top: 1px solid #949494; */
+    /* border-bottom: 1px solid #949494; */
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 20px;
 }
 
 .no-size {

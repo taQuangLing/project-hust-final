@@ -1,13 +1,13 @@
 <template>
-    <div class="branch-filter">
-        <span class="title">Chi nhánh</span>
-        <el-dropdown @command="handleCommandBranch">
+    <div class="manager-filter">
+        <span class="title">Quản lý</span>
+        <el-dropdown @command="handleCommandManager">
             <span class="el-dropdown-link">
-                {{ branchSelected.address }}<i class="el-icon-arrow-down el-icon--right"></i>
+                {{ managerSelected.name }}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :command="itemBranch" v-for="itemBranch in branchList" :key="itemBranch.id">{{
-            itemBranch.address }}</el-dropdown-item>
+                <el-dropdown-item :command="item" v-for="item in userList" :key="item.id">{{
+            item.name }}</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
     </div>
@@ -17,57 +17,59 @@
 import axios from 'axios';
 
 export default {
-    props: ['branchSelectedId'],
+    props: ['managerSelectedId'],
     data() {
         return {
-            branchList: [
+            userList: [
             ],
         }
     },
     computed: {
-        branchSelected() {
-            if (this.branchSelectedId == null || this.branchSelectedId == 0) {
+        managerSelected() {
+            console.log(this.managerSelectedId);
+            if (this.managerSelectedId == null || this.managerSelectedId == 0) {
                 return {
                     id: 0,
-                    address: '<none>'
+                    name: '<none>'
                 }
             } else {
-                return this.branchList.find(item => item.id == this.branchSelectedId);
+                return this.userList.find(item => item.id == this.managerSelectedId);
 
             }
         }
     },
     methods: {
-        handleCommandBranch(command) {
-            this.$emit('branchSelected', command);
+        handleCommandManager(command) {
+            this.$emit('managerSelected', command);
         },
-        async getBranches() {
-            await axios.get(this.$store.state.baseUrl + "/admin/v1/branches/filter?userId=" + localStorage.getItem('id'),
+        async getUserList() {
+            await axios.get(this.$store.state.baseUrl + "/admin/v1/employees/manager?userId=" + localStorage.getItem('id'),
                 { headers: { Authorization: 'Bearer ' + localStorage.getItem('user') } }
             )
                 .then(res => {
-                    this.branchList = res.data.data;
+                    this.userList = res.data.data;
                 })
                 .catch(err => {
                     console.log(err)
                     this.$message.error('Lỗi hệ thống')
                 })
-        }
+        },
+        
     },
     async mounted() {
-        await this.getBranches();
+        await this.getUserList();
     }
 };
 
 </script>
 
 <style>
-.branch-filter {
+.manager-filter {
     display: flex;
     align-items: center;
 }
 
-.branch-filter .el-dropdown {
+.manager-filter .el-dropdown {
     width: 300px;
     border: 1px solid #DCDFE6;
     border-radius: 7px;
@@ -75,13 +77,13 @@ export default {
     background: white;
 }
 
-.branch-filter .title {
+.manager-filter .title {
     color: rgb(41, 41, 41);
     font-size: 14px;
     margin-right: 5px;
 }
 
-.branch-filter .el-dropdown-link {
+.manager-filter .el-dropdown-link {
     cursor: pointer;
     color: #409EFF;
     display: flex;

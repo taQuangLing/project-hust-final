@@ -65,19 +65,19 @@ export default {
     mounted(){
         switch (this.$route.path) {
             case "/admin":
-                this.index = 1;
+                this.index = "1";
                 break;
             case "/admin/order-history":
-                this.index = 2;
+                this.index = "2";
                 break;
             case "/admin/employees":
-                this.index = 3;
+                this.index = "3";
                 break;
             case "/admin/branches":
-                this.index = 4;
+                this.index = "4";
                 break;
             case "/admin/products":
-                this.index = 5;
+                this.index = "5";
                 break;
         }
     },

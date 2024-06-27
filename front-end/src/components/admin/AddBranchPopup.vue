@@ -17,23 +17,22 @@
                 </div>
                 <div class="district flex">
                     <span>Quận/huyện</span>
-                    <el-input v-model="district"></el-input>
+                    <el-input v-model="town"></el-input>
                 </div>
 
-                <BranchSelect
-                    @branchSelected="selectBranch"
-                    class="branch-filter"
-                    :branchSelectedId="branchSelectedId"
+                <ManagerSelect
+                    @managerSelected="selectManager"
+                    class="manager-filter"
+                    :managerSelectedId="managerSelectedId"
                 />
                 <div class="img">
-                    <span class="title">Ảnh</span>
+                    <span class="title">Logo</span>
                     <el-upload
                         class="upload-demo"
                         list-type="picture"
                         :auto-upload="false"
                         :limit="1"
                         ref="upload"
-                        :on-change="handleChange"
                         :on-error="onError"
                         :on-success="onSuccess"
                         :data="data"
@@ -58,73 +57,81 @@
 
 <script>
 import BranchSelect from './BranchSelect.vue';
-import PositionSelect from './PositionSelect.vue';
+import ManagerSelect from './ManagerSelect.vue';
 import axios from 'axios';
 
 export default {
     components: {
         BranchSelect,
-        PositionSelect,
+        ManagerSelect,
     },
     data() {
         return {
-            branchSelectedId: 0,
-            positionSelectedId: 0,
+            managerSelectedId: 0,
             name: '',
             phoneNumber: '',
             email: '',
+            address: '',
+            city: '',
+            town: '',
         };
+    },
+    computed:{
+        data() {
+            return {
+                upload_preset: 'bhdixbmd',
+                api_key: '231664969325537'
+            }
+        }
     },
     methods: {
         closePopup() {
             this.$emit('close');
         },
-        selectPosition(param) {
-            this.positionSelectedId = param.id;
-        },
-        selectBranch(param) {
-            this.branchSelectedId = param.id;
+        selectManager(param) {
+            this.managerSelectedId = param.id;
         },
         save() {
-            if (
-                this.name == '' ||
-                this.phoneNumber == '' ||
-                this.branchSelectedId == 0 ||
-                this.positionSelectedId == 0
-            ) {
-                this.$message({
-                    message: 'Vui lòng điền đầy đủ thông tin',
-                    type: 'warning',
-                });
-                return;
+            if (this.name == "" || this.address == "") {
+                this.$message.warning("Vui lòng nhập đầy đủ thông tin");
+                return false;
             }
-            axios
-                .post(this.$store.state.baseUrl + '/auth/v1/register', {
-                    name: this.name,
-                    phone: this.phoneNumber,
-                    email: this.email,
-                    branchId: this.branchSelectedId,
-                    positionId: this.positionSelectedId,
-                    createdBy: localStorage.getItem('id'),
-                })
-                .then(res => {
-                    if (res.data.code != 2000) {
-                        this.$message({
-                            message: res.data.description,
-                            type: 'error',
-                        });
-                        return false;
-                    }
-                    this.$message({
-                        message: 'Đăng kí thành công',
-                        type: 'success',
-                    });
-                    this.$emit('userCreated');
-                    return true;
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+            if (this.$refs.upload.uploadFiles.length == 0) {
+                this.$message.warning("Vui lòng chọn ảnh");
+                return false;
+            }
+            if (this.$refs.upload.uploadFiles[0].status == "ready")this.$refs.upload.submit();
+                     
+        },
+        onError() {
+            this.$message.error("Lỗi khi upload ảnh");
+        },
+        onSuccess(e) {
+            this.img = e.url;
+            axios.post(this.$store.state.baseUrl + "/admin/v1/branches", 
+            {
+                name: this.name,
+                address: this.address,
+                town: this.town,
+                city: this.city,
+                createdBy: localStorage.getItem("id"),
+                logo: this.img,
+                managerId: this.managerSelectedId
+            },
+                {
+                    headers: { Authorization: "Bearer " + localStorage.getItem("user") }
+                },
+            ).then(res => {
+                if (res.data.code != 2000){
+                    this.$message.error(res.data.description);
+                    return;
+                }
+                this.$message.success("Thêm chi nhánh thành công");
+                this.$emit('branchCreated');
+                return;
+            }).catch(err => {
+                console.log(err);
+            });
         },
     },
 };

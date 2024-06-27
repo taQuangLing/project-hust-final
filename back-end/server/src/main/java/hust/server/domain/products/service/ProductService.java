@@ -45,8 +45,7 @@ public class ProductService {
     }
 
     public List<AdminProductResponse> getProductsByAdmin(String userId) {
-        List<Product> productList = productRepository.getByCreatedByOrderByActive(userId);
-        Collections.sort(productList, Comparator.comparing(Product::getCreatedAt).reversed());
+        List<Product> productList = productRepository.getByCreatedByAndSort(userId);
 
         return productList.stream().map(item -> {
             Category category = categoryRepository.getById(item.getCategoryId()).orElse(null);
@@ -104,8 +103,10 @@ public class ProductService {
         if (product == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "productId = " + id);
 
         if (!product.getCreatedBy().equals(userId))throw new ApiException(MessageCode.RESOURCES_AUTHORIZATION);
+
+        product.setActive(0);
         try {
-            productRepository.delete(product);
+            productRepository.save(product);
             return MessageCode.SUCCESS;
         }catch (Exception e){
             throw new ApiException(e, MessageCode.FAIL);

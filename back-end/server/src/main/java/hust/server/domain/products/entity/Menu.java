@@ -26,9 +26,6 @@ public class Menu extends BaseEntity {
     @Column(name = "branch_id")
     private Long branchId;
 
-    @Column(name = "user_id")
-    private String userId;
-
     @Column(name = "summary")
     private String summary;
 

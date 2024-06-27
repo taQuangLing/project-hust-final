@@ -31,6 +31,8 @@
         <div class="table">
             <el-table :data="productsResult" stripe style="width: 100%" ref="table" :cell-style='statusStyle'
                 :header-cell-style='headerStyle'>
+                <el-table-column prop="id" label="ID" width="100">
+                </el-table-column>
                 <el-table-column width="150">
                     <template slot-scope="scope">
                         <img :src="scope.row.img" alt="" style="width: 80px; height: 60px">
@@ -129,11 +131,11 @@ export default {
             let style = {
                 textAlign: "center"
             };
-            if (cell.columnIndex == 1) {
+            if (cell.columnIndex == 2) {
                 style.textAlign = "left";
                 style.fontWeight = "600";
             }
-            if (cell.columnIndex == 4) {
+            if (cell.columnIndex == 5) {
                 switch (cell.row.status) {
                     case "Hoạt động":
                         style.color = "#00d306";
@@ -150,7 +152,7 @@ export default {
             let style = {
                 textAlign: "center"
             };
-            if (cell.columnIndex == 1) {
+            if (cell.columnIndex == 2) {
                 style.textAlign = "left";
             }
             return style;
@@ -174,8 +176,13 @@ export default {
             this.page = val
         },
         deleteProduct(id) {
-            console.log(id);
-            axios.delete(this.$store.state.baseUrl + "/admin/v1/products/" + id + "?userId=" + localStorage.getItem("id"),
+            this.$confirm('Bạn có chắc chắn muốn xóa?', 'Warning', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning',
+                title: 'Confirm'
+            }).then(() => {
+                axios.delete(this.$store.state.baseUrl + "/admin/v1/products/" + id + "?userId=" + localStorage.getItem("id"),
                 {
                     headers: { Authorization: "Bearer " + localStorage.getItem("user") }
                 }).then((response) => {
@@ -188,6 +195,8 @@ export default {
                 }).catch((error) => {
                     console.log(error);
                 })
+
+            })
         },
         createProduct() {
             this.getProducts();

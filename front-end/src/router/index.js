@@ -89,6 +89,11 @@ export const router = new Router({
           name: 'branches',
           path: 'branches',
           component: () => import('@/components/admin/Branch')
+        },
+        {
+          name: 'branchDetails',
+          path: 'branches/:id',
+          component: () => import('@/components/admin/BranchDetails')
         }
       ]
     },

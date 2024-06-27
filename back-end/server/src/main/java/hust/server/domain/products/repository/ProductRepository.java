@@ -24,7 +24,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<Product> getById(Long id);
 
-    List<Product> getByCreatedByOrderByActive(String userId);
+    List<Product> getByCreatedBy(String userId);
+
+    @Query(
+            value = "select products.* from products where created_by = :userId " +
+                    "order by active desc, " +
+                    "created_at desc", nativeQuery = true
+    )
+    List<Product> getByCreatedByAndSort(String userId);
 
     Optional<Product> getByIdAndCreatedBy(Long id, String createdBy);
 }
