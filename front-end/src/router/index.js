@@ -10,104 +10,104 @@ export const router = new Router({
   routes: [
     {
       path: '/',
-      component: () => import('@/components/customer/Nav'),
+      component: () => import('@/pages/guest/Nav'),
       meta: { requiresAuth: true, roles: ['GUEST'] },
       children: [
         {
           path: '/',
           name: 'home',
-          component: () => import('@/components/customer/Product'),
+          component: () => import('@/pages/guest/Product'),
         },
         {
           path: '/products/:id',
           name: 'productDetails',
-          component: () => import('@/components/customer/Details')
+          component: () => import('@/pages/guest/Details')
         },
         {
           path: 'carts',
           name: 'carts',
-          component: () => import('@/components/customer/Cart')
+          component: () => import('@/pages/guest/Cart')
         },
         {
           name: 'my-orders',
           path: 'history',
-          component: () => import('@/components/customer/MyOrder')
+          component: () => import('@/pages/guest/MyOrder')
         },
         {
           path: '/order-success',
-          component: () => import('@/components/customer/OrderSuccess')
+          component: () => import('@/pages/guest/OrderSuccess')
         }
       ],
     },
     {
       path: '/cashier',
-      component: () => import('@/components/cashier/Nav'),
+      component: () => import('@/pages/cashier/Nav'),
       meta: { requiresAuth: true, roles: ['USER'] },
       children: [
         {
           path: '',
-          component: () => import('@/components/cashier/Home')
+          component: () => import('@/pages/cashier/Home')
         },
         {
           name: 'order',
           path: 'order',
-          component: () => import('@/components/cashier/Order')
+          component: () => import('@/pages/cashier/Order')
         },
       ]
     },
     {
       path: '/admin',
-      component: () => import('@/components/admin/Nav'),
+      component: () => import('@/pages/admin/Nav'),
       meta: { requiresAuth: true, roles: ['ADMIN'] },
       children: [
         {
           name: 'homeAdmin',
           path: '',
-          component: () => import('@/components/admin/Home')
+          component: () => import('@/pages/admin/Home')
         },
         {
           name: 'products',
           path: 'products',
-          component: () => import('@/components/admin/Product')
+          component: () => import('@/pages/admin/Product')
         },
         {
           name: 'AdminProductDetails',
           path: 'products/:id',
-          component: () => import('@/components/admin/ProductDetails')
+          component: () => import('@/pages/admin/ProductDetails')
         },
         {
           name: 'orderHistory',
           path: 'order-history',
-          component: () => import('@/components/admin/OrderHistory')
+          component: () => import('@/pages/admin/OrderHistory')
         },
         {
           name: 'employees',
           path: 'employees',
-          component: () => import('@/components/admin/Employee')
+          component: () => import('@/pages/admin/Employee')
         },
         {
           name: 'branches',
           path: 'branches',
-          component: () => import('@/components/admin/Branch')
+          component: () => import('@/pages/admin/Branch')
         },
         {
           name: 'branchDetails',
           path: 'branches/:id',
-          component: () => import('@/components/admin/BranchDetails')
+          component: () => import('@/pages/admin/BranchDetails')
         }
       ]
     },
     {
       path: '/login',
-      component: () => import('@/components/Login')
+      component: () => import('@/pages/Login')
     },
     {
       path: '/authenticate',
-      component: () => import('@/components/customer/Authen')
+      component: () => import('@/pages/guest/Authen')
     },
     {
       path: '/:catchAll(.*)',
-      component: () => import('@/components/NotFoundComponent'),
+      component: () => import('@/pages/NotFoundComponent'),
       name: 'NotFound'
     }
   ]

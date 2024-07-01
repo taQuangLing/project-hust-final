@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 @Data
 @Entity
@@ -93,6 +94,7 @@ public class Branch extends BaseEntity {
                 .code(code)
                 .qrcode(qrcode)
                 .createdAt(Utility.toLocalDateTime(createdAt, ""))
+                .menuItemRes(new ArrayList<>())
                 .build();
     }
 }

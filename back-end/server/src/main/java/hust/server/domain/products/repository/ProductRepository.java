@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select p.* from products p, " +
-            "(select menu_item.id as id from menu, menu_item " +
+            "(select menu_item.product_id as id from menu, menu_item " +
             "where " +
             "menu.branch_id = :branchId and " +
             "menu_item.menu_id = menu.id and " +
@@ -19,7 +19,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "menu_item.active = 1 " +
             ") menu_p " +
             "where  " +
-            "p.id = menu_p.id", nativeQuery = true)
+            "p.id = menu_p.id and " +
+            "p.active = 1", nativeQuery = true)
     List<Product> getProductMenu(Long branchId);
 
     Optional<Product> getById(Long id);
@@ -34,4 +35,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> getByCreatedByAndSort(String userId);
 
     Optional<Product> getByIdAndCreatedBy(Long id, String createdBy);
+
+    Optional<Product> getByIdAndActive(Long productId, int i);
 }

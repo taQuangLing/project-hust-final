@@ -20,6 +20,7 @@ public class AdminCategoryRequest {
                 .name(name)
                 .summary(description)
                 .img(img)
+                .active(1)
                 .build();
     }
 }

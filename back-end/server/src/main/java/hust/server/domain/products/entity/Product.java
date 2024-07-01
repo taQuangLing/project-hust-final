@@ -123,12 +123,14 @@ public class Product extends BaseEntity {
     }
 
     public AdminProductResponse toAdminProductResponse() {
+        String price = "";
+        if (hasSize == 0)price = formatCurrency(this.price);
         return AdminProductResponse.builder()
                 .id(id)
                 .img(img)
                 .name(name)
                 .categoryId(categoryId)
-                .priceDisplay(formatCurrency(price))
+                .priceDisplay(price)
                 .status(convertActive())
                 .build();
     }

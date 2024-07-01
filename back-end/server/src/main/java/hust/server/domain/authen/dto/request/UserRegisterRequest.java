@@ -15,4 +15,5 @@ public class UserRegisterRequest {
     private String password;
     private String email;
     private Long positionId;
+    private String role;
 }

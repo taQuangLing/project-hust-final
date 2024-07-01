@@ -1,7 +1,6 @@
 package hust.server.domain.products.service;
 
 import hust.server.app.exception.ApiException;
-import hust.server.domain.order.entity.Order;
 import hust.server.domain.products.dto.request.AdminCategoryRequest;
 import hust.server.domain.products.dto.request.AdminProductRequest;
 import hust.server.domain.products.dto.request.AdminProductUpdatedRequest;
@@ -13,10 +12,7 @@ import hust.server.infrastructure.enums.MessageCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.mail.Message;
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -66,21 +62,21 @@ public class ProductService {
         Product product = request.toProductEntity();
         try{
             productRepository.save(product);
-            if (request.getIsAllForMenu()){
-                List<Menu> menuList = menuRepository.getByCreatedBy(request.getUserId());
-                for (Menu item : menuList){
-                    MenuItem menuItem = new MenuItem();
-                    menuItem.setProductId(product.getId());
-                    menuItem.setActive(1);
-                    item.getMenuItemList().add(menuItem);
-                    try {
-                        menuItemRepository.save(menuItem);
-                        menuRepository.save(item);
-                    }catch (Exception e){
-                        throw new ApiException(e, MessageCode.FAIL);
-                    }
+            List<Menu> menuList = menuRepository.getByCreatedBy(request.getUserId());
+            for (Menu item : menuList){
+                MenuItem menuItem = new MenuItem();
+                menuItem.setProductId(product.getId());
+                if (request.getIsAllForMenu())menuItem.setActive(1);
+                else menuItem.setActive(0);
+                item.getMenuItemList().add(menuItem);
+                try {
+                    menuItemRepository.save(menuItem);
+                    menuRepository.save(item);
+                }catch (Exception e){
+                    throw new ApiException(e, MessageCode.FAIL);
                 }
             }
+
 
             return MessageCode.SUCCESS;
         }catch (Exception e) {

@@ -52,4 +52,8 @@ input[type="checkbox"] {
   accent-color: #474747 !important;
   margin: 0;
 }
+
+input {
+  font-family: 'sarabun';
+}
 </style>

@@ -1,10 +1,10 @@
 package hust.server.app.endpoint.rest;
 
 import hust.server.app.service.ResponseFactory;
-import hust.server.domain.order.dto.request.OrderCreationRequest;
-import hust.server.domain.order.dto.request.OrderUpdateRequest;
-import hust.server.domain.order.dto.request.OrderUpdatedStatusRequest;
-import hust.server.domain.order.service.OrderService;
+import hust.server.domain.orders.dto.request.OrderCreationRequest;
+import hust.server.domain.orders.dto.request.OrderUpdateRequest;
+import hust.server.domain.orders.dto.request.OrderUpdatedStatusRequest;
+import hust.server.domain.orders.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,8 +1,8 @@
 package hust.server.app.service;
 
-import hust.server.infrastructure.dto.response.BaseResponse;
-import hust.server.infrastructure.dto.response.Response;
-import hust.server.infrastructure.dto.response.ResponseList;
+import hust.server.app.dto.response.BaseResponse;
+import hust.server.app.dto.response.Response;
+import hust.server.app.dto.response.ResponseList;
 import hust.server.infrastructure.enums.MessageCode;
 import org.springframework.http.ResponseEntity;
 

@@ -183,8 +183,8 @@ public class BranchService {
         if (menu == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "branchId = " + branch.getId());
 
         for (MenuItem item : menu.getMenuItemList()){
-            Product product = productRepository.getById(item.getProductId()).orElse(null);
-            if (product == null || product.getActive() == 0)continue;
+            Product product = productRepository.getByIdAndActive(item.getProductId(), 1).orElse(null);
+            if (product == null)continue;
             AdminMenuItemResponse menuItemResponse = item.toAdminMenuItemResponse();
             menuItemResponse.setProductName(product.getName());
             menuItemResponse.setImg(product.getImg());

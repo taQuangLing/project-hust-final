@@ -68,18 +68,22 @@ public class UserService implements UserDetailsService {
             throw new ApiException(MessageCode.USERNAME_ALREADY_EXISTS);
         }
         Branch branch = branchRepository.getById(request.getBranchId()).orElse(null);
-        if (branch == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "branchId = " + request.getBranchId());
+        if (branch == null && request.getRole().equals("USER"))throw new ApiException(MessageCode.ID_NOT_FOUND, "branchId = " + request.getBranchId());
 
         // gen code employee
-        StringBuilder code = new StringBuilder(Utility.concatPrefixWord(branch.getName()));
-        int countEmployee = userRepository.countEmployee(branch.getId());
-        code.append(Utility.padWithZeros(String.valueOf(countEmployee), 6));
+        StringBuilder code;
+        if (request.getRole().equals("ADMIN"))code = new StringBuilder();
+        else {
+            code = new StringBuilder(Utility.concatPrefixWord(branch.getName()));
+            int countEmployee = userRepository.countEmployee(branch.getId());
+            code.append(Utility.padWithZeros(String.valueOf(countEmployee), 6));
+        }
 
         User newUser = new User();
         newUser.setUsername(request.getPhone());
         newUser.setCode(code.toString());
         newUser.setPhone(request.getPhone());
-        newUser.setRole("USER");
+        newUser.setRole(request.getRole());
         newUser.setPositionId(request.getPositionId());
         newUser.setBranch(branch);
         newUser.setEmail(request.getEmail());
@@ -147,8 +151,9 @@ public class UserService implements UserDetailsService {
         List<User> userList = userRepository.getByAdminUserId(userId);
         return userList.stream().map(item -> {
             Position position = positionRepository.getById(item.getPositionId()).orElse(null);
-            if (position == null)throw new ApiException(MessageCode.ID_NOT_FOUND, "positionId = " + item.getPositionId());
             EmployeeResponse resItem = item.toEmployeeResponse();
+            if (position == null)resItem.setPosition("");
+            else
             resItem.setPosition(position.getName());
             return resItem;
         }).collect(Collectors.toList());
